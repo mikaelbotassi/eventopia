@@ -1,4 +1,3 @@
-version: '3'
 services:
     laravel.test:
         build:
@@ -26,7 +25,7 @@ services:
             - mysql
             - redis
             - mailpit
-            - localstack
+            - selenium
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -84,25 +83,14 @@ services:
             PMA_PORT: 3306
             PMA_HOST: "mysql"
             UPLOAD_LIMIT: "100G"
-    localstack:
-        build:
-            context: ./.docker/local/localstack
-            dockerfile: Dockerfile
-        image: localstack-lev
-        environment:
-            SERVICES: "s3"
-            DEBUG: 0
-            LOCALSTACK_HOST: "${LOCALSTACK_HOST}"
-            AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-            AWS_SECRET_ACCESS_KEY: '${AWS_SECRET_ACCESS_KEY}'
-            AWS_DEFAULT_REGION: '${AWS_DEFAULT_REGION}'
-            AWS_DEFAULT_OUTPUT: 'json'
-        ports:
-            - "4572:4572" # s3
+    selenium:
+        image: selenium/standalone-chrome
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - '/dev/shm:/dev/shm'
         networks:
             - sail
-        volumes:
-            - "sail-localstack:/var/lib/localstack"
 networks:
     sail:
         driver: bridge
@@ -111,5 +99,5 @@ volumes:
         driver: local
     sail-redis:
         driver: local
-    sail-localstack:
+    sail-meilisearch:
         driver: local

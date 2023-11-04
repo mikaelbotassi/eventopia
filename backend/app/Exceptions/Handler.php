@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,8 +24,20 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        //
     }
+
+    public function render($request, Throwable $e)
+    {
+        if($e instanceof MethodNotAllowedException){
+            return response()->json([
+                'error' => $e->getMessage()
+            ])->setStatusCode(405);
+        }
+
+        return response()->json([
+            'error' => $e->getMessage()
+        ])->setStatusCode(500);
+    }
+
 }
