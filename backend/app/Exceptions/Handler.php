@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
@@ -29,6 +30,12 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        if($e instanceof ValidationException){
+            return response()->json([
+                'error' => $e->errors()
+            ])->setStatusCode(422);
+        }
+
         if($e instanceof MethodNotAllowedException){
             return response()->json([
                 'error' => $e->getMessage()

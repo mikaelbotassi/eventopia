@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,19 @@ Route::group([
         Route::get('logout', 'logout');
         Route::get('refresh', 'refresh');
         Route::get('me', 'me');
+    });
+
+});
+
+Route::group([
+
+    'prefix' => 'user',
+    'middleware' => 'auth:api'
+
+], function ($router) {
+
+    Route::controller(UserController::class)->group(function (){
+        Route::post('profile', 'profile');
     });
 
 });

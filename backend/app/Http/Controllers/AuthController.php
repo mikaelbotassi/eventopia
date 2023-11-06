@@ -17,7 +17,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh']]);
     }
 
     /**
@@ -37,6 +37,27 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
+        $request->validate(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'min:3',
+                    'max:255'
+                ],
+                'email' => [
+                    'required',
+                    'string',
+                    'min:10',
+                    'unique:users',
+                     'max:191'
+                ],
+                'password' => [
+                    'string',
+                    'max:20'
+                ]
+            ]
+        );
         $user = new User([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
