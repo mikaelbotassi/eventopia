@@ -9,12 +9,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property string id
  * @property string name
  * @property string email
  * @property string password
+ * @property int[] categories
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -29,6 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'birth'
     ];
 
     /**
@@ -60,4 +63,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+//    public function categories():BelongsToMany{
+//        return $this->
+//    }
+
 }

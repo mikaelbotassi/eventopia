@@ -17,10 +17,7 @@ class UserController extends Controller
         $this->userService = new UserService();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function profile(Request $request):JsonResponse
+    public function update(Request $request):JsonResponse
     {
         try {
             if($this->userService->update(UserDTO::makeFromRequest($request)))

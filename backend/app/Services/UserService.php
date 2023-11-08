@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 class UserService
 {
-    public function findAll(Collection $filters = new Collection()):Collection{
+    public function getAll(Collection $filters = new Collection()):Collection{
         $query = User::query();
 
         foreach ($filters as $column => $value){

@@ -55,12 +55,17 @@ class AuthController extends Controller
                 'password' => [
                     'string',
                     'max:20'
+                ],
+                'birth' => [
+                    'date',
+                    'required'
                 ]
             ]
         );
         $user = new User([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
+            'birth' => $request->input('birth'),
             'password' => Hash::make($request->input('password'))
         ]);
         if($user->save()){
