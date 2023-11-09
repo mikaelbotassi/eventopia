@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 abstract class DTO
 {
@@ -27,6 +28,20 @@ abstract class DTO
         }
 
         return $new;
+    }
+
+    public static function toDto(Collection $collection) : Collection {
+        $newDto = new Collection();
+        $dtoClass = get_called_class();
+        foreach ($collection as $value){
+            $objDto = new $dtoClass();
+            foreach (get_class_vars($dtoClass) as $key => $var){
+                if(property_exists($objDto, $key) && isset($value->$key))
+                    $objDto->$key = $value->$key;
+            }
+            $newDto->add($objDto);
+        }
+        return $newDto;
     }
 
     public function toArray() : array

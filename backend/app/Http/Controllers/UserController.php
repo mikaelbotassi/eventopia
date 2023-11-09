@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\User\CreateUserDTO;
 use App\DTO\User\UserDTO;
 use App\Models\User;
 use App\Services\UserService;
@@ -27,4 +28,16 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
+    public function create(Request $request):JsonResponse
+    {
+        try {
+            if($this->userService->create(CreateUserDTO::makeFromRequest($request)))
+                return response()->json(['message' => 'User created successfully'])->setStatusCode(200);
+            return response()->json(['message' => 'Unable to save user data'])->setStatusCode(200);
+        }catch (Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
 }

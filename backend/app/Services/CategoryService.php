@@ -11,14 +11,15 @@ use Illuminate\Support\Collection;
 
 class CategoryService
 {
-    public function getAll(Collection $filters = new Collection()):Collection{
+    public function getAll(DTO $dtoClass,Collection $filters = new Collection()):Collection{
         $query = Category::query();
 
         foreach ($filters as $column => $value){
             $query->where($column, $value);
         }
 
-        return $query->get();
+        return $dtoClass::toDto($query->get());
+
     }
 
     public function findById(int $id):Model{
@@ -39,6 +40,11 @@ class CategoryService
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
         return $obj->save();
+    }
+
+    public function delete(int $id):bool{
+        $obj = Category::findByOrFail($id);
+        return $obj->delete();
     }
 
 }

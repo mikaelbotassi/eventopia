@@ -35,7 +35,6 @@ Route::group([
 
     Route::controller(AuthController::class)->group(function (){
         Route::post('login', 'login');
-        Route::post('register', 'register');
         Route::get('logout', 'logout');
         Route::get('refresh', 'refresh');
         Route::get('me', 'me');
@@ -46,12 +45,13 @@ Route::group([
 Route::group([
 
     'prefix' => 'user',
-    'middleware' => 'auth:api'
 
 ], function ($router) {
 
     Route::controller(UserController::class)->group(function (){
-        Route::put('', 'update');
+        Route::middleware('auth:api')->put('', 'update');
+        Route::post('', 'create');
+        Route::delete('', 'delete');
     });
 
 });
@@ -65,6 +65,9 @@ Route::group([
 
     Route::controller(CategoryController::class)->group(function (){
         Route::post('', 'create');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+        Route::get('/{id}', 'getById');
         Route::get('', 'getAll');
     });
 
