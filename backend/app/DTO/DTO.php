@@ -1,6 +1,7 @@
 <?php
 
 namespace App\DTO;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -30,7 +31,7 @@ abstract class DTO
         return $new;
     }
 
-    public static function toDto(Collection $collection) : Collection {
+    public static function toDTOs(Collection $collection) : Collection {
         $newDto = new Collection();
         $dtoClass = get_called_class();
         foreach ($collection as $value){
@@ -42,6 +43,16 @@ abstract class DTO
             $newDto->add($objDto);
         }
         return $newDto;
+    }
+
+    public static function toDTO(Model $model) : self {
+        $dtoClass = get_called_class();
+        $objDto = new $dtoClass();
+        foreach (get_class_vars($dtoClass) as $key => $var){
+            if(property_exists($objDto, $key) && isset($model->$key))
+                $objDto->$key = $model->$key;
+        }
+        return $objDto;
     }
 
     public function toArray() : array

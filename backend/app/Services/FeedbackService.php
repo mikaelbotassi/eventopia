@@ -2,17 +2,16 @@
 
 namespace App\Services;
 
-use App\DTO\Category\CategoryDTO;
+use App\DTO\Feedback\FeedbackDTO;
 use App\DTO\DTO;
-use App\DTO\User\UserDTO;
-use App\Models\Category;
+use App\Models\Feedback;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class CategoryService
+class FeedbackService
 {
     public function getAll(DTO $dtoClass,Collection $filters = new Collection()):Collection{
-        $query = Category::query();
+        $query = Feedback::query();
 
         foreach ($filters as $column => $value){
             $query->where($column, $value);
@@ -22,28 +21,28 @@ class CategoryService
 
     }
 
-    public function findById(int $id):Model{
-        return Category::findByOrFail($id);
+    public function findById(int $id):DTO{
+        return FeedbackDTO::toDTO(Feedback::findByOrFail($id));
     }
 
-    public function create(DTO $categoryDTO):bool{
-        $obj = new Category();
-        $arr = $categoryDTO->toArray();
+    public function create(DTO $feedbackDTO):bool{
+        $obj = new Feedback();
+        $arr = $feedbackDTO->toArray();
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
         return $obj->save();
     }
 
-    public function update(CategoryDTO $categoryDTO, int $id):bool{
-        $obj = Category::findByOrFail($id);
-        $arr = $categoryDTO->toArray();
+    public function update(DTO $feedbackDTO, int $id):bool{
+        $obj = Feedback::findByOrFail($id);
+        $arr = $feedbackDTO->toArray();
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
         return $obj->save();
     }
 
     public function delete(int $id):bool{
-        $obj = Category::findByOrFail($id);
+        $obj = Feedback::findByOrFail($id);
         return $obj->delete();
     }
 

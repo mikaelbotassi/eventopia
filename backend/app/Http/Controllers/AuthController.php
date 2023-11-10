@@ -36,50 +36,6 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function register(Request $request){
-        $request->validate(
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'min:3',
-                    'max:255'
-                ],
-                'email' => [
-                    'required',
-                    'string',
-                    'min:10',
-                    'unique:users',
-                     'max:191'
-                ],
-                'password' => [
-                    'string',
-                    'max:20'
-                ],
-                'birth' => [
-                    'date',
-                    'required'
-                ]
-            ]
-        );
-        $user = new User([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'birth' => $request->input('birth'),
-            'password' => Hash::make($request->input('password'))
-        ]);
-        if($user->save()){
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully registered user'
-            ])->setStatusCode(200);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'There was an error saving the user'
-        ])->setStatusCode(200);
-    }
-
     /**
      * Get the authenticated User.
      *

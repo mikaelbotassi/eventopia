@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\DTO\DTO;
 use App\DTO\User\CreateUserDTO;
+use App\DTO\User\GetUserDTO;
+use App\DTO\User\UpdateUserDTO;
 use App\DTO\User\UserDTO;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -21,28 +25,51 @@ class UserService
         return $query->get();
     }
 
-    public function findById(int $id):Model{
-        return User::findByOrFail($id);
+    public function findById(int $id):DTO{
+        return GetUserDTO::toDTO(User::findByOrFail($id));
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function update(UserDTO $user):bool{
+    public function update(DTO $user):bool{
         $obj = User::findByOrFail(auth()->user()->id);
         $arr = $user->toArray();
+        $categories = null;
+
+        if(isset($arr['categories'])){
+            $categories = $arr['categories'];
+            unset($arr['categories']);
+        }
+
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
-        return $obj->save();
+
+        $obj->save();
+
+        if($categories){
+            $obj->categories()->detach();
+            foreach ($categories as $key => $arrObj){
+                $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
+            }
+        }
+        return true;
+
     }
 
     public function create(CreateUserDTO $user):bool{
         $obj = new User();
         $user->password = Hash::make($user->password);
         $arr = $user->toArray();
+        $categories = $arr['categories'];
+        unset($arr['categories']);
+
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
-        return $obj->save();
+
+        $obj->save();
+
+        foreach ($categories as $key => $arrObj){
+            $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
+        }
+        return true;
     }
 
 }

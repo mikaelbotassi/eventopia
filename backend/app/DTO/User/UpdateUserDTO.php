@@ -4,7 +4,7 @@ namespace App\DTO\User;
 use App\DTO\DTO;
 use Illuminate\Database\Eloquent\Collection;
 
-class CreateUserDTO extends DTO
+class UpdateUserDTO extends DTO
 {
     public string|null $name;
     public string|null $email;
@@ -16,13 +16,13 @@ class CreateUserDTO extends DTO
     {
         parent::__construct([
             'name' => [
-                'required',
+                'nullable',
                 'string',
                 'min:3',
                 'max:255'
             ],
             'email' => [
-                'required',
+                'nullable',
                 'string',
                 'min:10',
                 'unique:users',

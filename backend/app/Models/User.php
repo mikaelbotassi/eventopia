@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Utils\Database\EloquentFindable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -65,7 +66,11 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function categories():BelongsToMany{
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class, 'user_categories');
+    }
+
+    public function feedbacks():HasMany{
+        return $this->hasMany(Feedback::class, 'user_id', 'id');
     }
 
 }
