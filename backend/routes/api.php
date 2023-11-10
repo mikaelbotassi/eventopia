@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\EventController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -72,6 +73,23 @@ Route::group([
 ], function ($router) {
 
     Route::controller(FeedbackController::class)->group(function (){
+        Route::post('', 'create');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+        Route::get('/{id}', 'getById');
+        Route::get('', 'getAll');
+    });
+
+});
+
+Route::group([
+
+    'prefix' => 'event',
+    'middleware' => 'auth:api'
+
+], function ($router) {
+
+    Route::controller(EventController::class)->group(function (){
         Route::post('', 'create');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');

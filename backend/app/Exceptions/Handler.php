@@ -33,7 +33,7 @@ class Handler extends ExceptionHandler
     {
         if($e instanceof ValidationException){
             return response()->json([
-                'error' => $e->errors()
+                'error' => $e->errors(),
             ])->setStatusCode(422);
         }
 
@@ -44,7 +44,9 @@ class Handler extends ExceptionHandler
         }
 
         return response()->json([
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
         ])->setStatusCode(500);
     }
 
