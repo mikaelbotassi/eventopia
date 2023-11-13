@@ -113,6 +113,8 @@ Route::group([
         Route::delete('/{id}', 'delete');
         Route::get('/{id}', 'getById');
         Route::get('', 'getAll');
+        Route::get('qr-code/{event_id}', 'getQrCode');
+        Route::get('confirm-presence/{qrCode}', 'confirmPresence');
     });
 
 });

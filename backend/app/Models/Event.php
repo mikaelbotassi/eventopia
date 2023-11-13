@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int workload
  * @property string registration_validity
  * @property User ownerObj
+ * @property int owner
+ * @method static where(string $string, int $int)
  */
 
 class Event extends Model

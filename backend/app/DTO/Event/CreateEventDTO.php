@@ -12,7 +12,6 @@ class CreateEventDTO extends DTO
     public string|null $description;
     public int|null $workload;
     public string|null $registration_validity;
-    public int|null $owner;
     public function __construct()
     {
         parent::__construct([

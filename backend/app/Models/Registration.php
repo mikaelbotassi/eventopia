@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property User user
  * @property Event event
  * @property bool is_present
+ * @method static where(string $string, int|string|null $id)
  */
 
 class Registration extends Model

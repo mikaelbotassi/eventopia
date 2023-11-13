@@ -31,6 +31,34 @@ class RegistrationController extends Controller
         }
     }
 
+    public function getQrCode($event_id):JsonResponse
+    {
+        try {
+            $obj = $this->registrationService->getQrCodeByEvent($event_id);
+            return response()->json([
+                'data' => $obj
+            ])->setStatusCode(200);
+        }catch (Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function confirmPresence($qrCode):JsonResponse
+    {
+        try {
+            if($this->registrationService->confirmPresence($qrCode)){
+                return response()->json([
+                    'data' => 'Presence confirmed successfully'
+                ])->setStatusCode(200);
+            }
+            return response()->json([
+                'data' => 'We were unable to confirm your presence, please try again later'
+            ])->setStatusCode(406);
+        }catch (Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
     public function getAll():JsonResponse
     {
         try {
