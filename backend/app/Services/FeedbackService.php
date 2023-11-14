@@ -5,7 +5,6 @@ namespace App\Services;
 use App\DTO\Feedback\FeedbackDTO;
 use App\DTO\DTO;
 use App\Models\Feedback;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class FeedbackService
@@ -30,6 +29,7 @@ class FeedbackService
         $arr = $feedbackDTO->toArray();
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
+        $obj->user_id = auth()->id();
         return $obj->save();
     }
 

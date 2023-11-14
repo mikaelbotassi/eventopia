@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string email
  * @property string password
  * @property int[] categories
+ * @property Certificate[] certificates
+ * @property Feedback[] feedbacks
+ * @method static where(string $string, mixed $user_id)
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -71,6 +74,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function feedbacks():HasMany{
         return $this->hasMany(Feedback::class, 'user_id', 'id');
+    }
+
+    public function certificates():HasMany{
+        return $this->hasMany(Certificate::class, 'user_id', 'id');
     }
 
 }

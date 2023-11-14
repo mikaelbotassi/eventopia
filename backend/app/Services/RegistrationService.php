@@ -63,7 +63,7 @@ class RegistrationService
      */
     public function delete(int $id):bool{
         $obj = Registration::findByOrFail($id);
-        if($obj->user != auth()->id() || Event::findByOrFail('id', $obj->event_id)->owner != auth()->id())
+        if($obj->user_id != auth()->id() || Event::findByOrFail('id', $obj->event_id)->owner != auth()->id())
             throw new Exception("You do not have privileges to perform this action");
         return $obj->delete();
     }

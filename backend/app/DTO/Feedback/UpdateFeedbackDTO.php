@@ -6,11 +6,17 @@ use App\Models\Category;
 
 class UpdateFeedbackDTO extends DTO
 {
-    public string|null $descricao;
+    public string|null $description;
 
     public function __construct()
     {
-        parent::__construct([]);
+        parent::__construct([
+            'description' => [
+                'string',
+                'required',
+                'min:3'
+            ],
+        ]);
     }
 
 }

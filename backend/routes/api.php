@@ -8,12 +8,13 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\CertificateController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/', function (Request $request) {
+Route::get('/', function () {
     return response()->json([
         'version' => app()->version()
     ]);
@@ -41,7 +42,10 @@ Route::group([
 ], function ($router) {
 
     Route::controller(UserController::class)->group(function (){
-        Route::middleware('auth:api')->put('', 'update');
+        Route::middleware('auth:api')->group(function (){
+            Route::put('', 'update');
+            Route::get('me', 'me');
+        });
         Route::post('', 'create');
         Route::get('/{id}', 'findById');
         Route::delete('', 'delete');
@@ -115,6 +119,23 @@ Route::group([
         Route::get('', 'getAll');
         Route::get('qr-code/{event_id}', 'getQrCode');
         Route::get('confirm-presence/{qrCode}', 'confirmPresence');
+    });
+
+});
+
+Route::group([
+
+    'prefix' => 'certificate',
+    'middleware' => 'auth:api'
+
+], function ($router) {
+
+    Route::controller(CertificateController::class)->group(function (){
+        Route::post('', 'create');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+        Route::get('/{id}', 'getById');
+        Route::get('', 'getAll');
     });
 
 });

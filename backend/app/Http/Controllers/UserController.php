@@ -29,6 +29,16 @@ class UserController extends Controller
         }
     }
 
+    public function me():JsonResponse
+    {
+        try {
+            $obj = $this->userService->findById(auth()->id());
+            return response()->json(['data' => $obj])->setStatusCode(200);
+        }catch (Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
     public function update(Request $request):JsonResponse
     {
         try {

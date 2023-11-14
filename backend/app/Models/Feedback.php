@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int id
- * @property string descricao
- * @property User autor
+ * @property string description
+ * @property User author
+ * @property int user_id
+ * @property int event_id
  * @property string date
  */
 
@@ -24,8 +26,12 @@ class Feedback extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function autor():BelongsTo{
+    public function author():BelongsTo{
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function event():BelongsTo{
+        return $this->belongsTo(Event::class, 'event_id', 'id');
     }
 
 }

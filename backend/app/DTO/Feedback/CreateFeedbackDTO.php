@@ -6,21 +6,21 @@ use App\Models\Category;
 
 class CreateFeedbackDTO extends DTO
 {
-    public string|null $descricao;
-    public int|null $user_id;
+    public string|null $description;
+    public int|null $event_id;
 
     public function __construct()
     {
         parent::__construct([
-            'descricao' => [
+            'description' => [
                 'string',
                 'required',
                 'min:3'
             ],
-            'user_id' => [
+            'event_id' => [
                 'integer',
                 'gt:0',
-                'exists:users,id'
+                'exists:events,id'
             ]
         ]);
     }

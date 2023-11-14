@@ -25,7 +25,7 @@ class UserService
         return $query->get();
     }
 
-    public function findById(int $id):DTO{
+    public function findById(int|string $id):DTO{
         return GetUserDTO::toDTO(User::findByOrFail($id));
     }
 
