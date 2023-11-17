@@ -10,13 +10,18 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@element-plus/nuxt": "^1.0.6",
     "@nuxt/devtools": "latest",
+    "element-plus": "^2.4.2",
     "nuxt": "^3.8.1",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18",
     "@nuxtjs/tailwindcss": "^6.9.5",
+    "@popperjs/core": "^2.11.8",
     "tailwindcss": "^3.3.5"
   }
 }
