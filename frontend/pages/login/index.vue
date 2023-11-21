@@ -3,7 +3,7 @@
         <div class="bg-gradient-login">
             <div class="lg:grid grid-cols-2">
                 <div class="flex flex-col justify-center p-10">
-                    <div class="flex items-center mb-5">
+                    <div class="flex items-center mb-10">
                         <img src="~/assets/img/brand.png" alt="" class="max-w-full h-[75px]">
                     </div>
                     <h1 class="text-secondary text-3xl mb-5 font-bold">BEM VINDO AO <span class="text-white">EVENTOPIA</span>!</h1>
@@ -11,11 +11,14 @@
                     <div>
                         <el-input v-model="email" size="large" placeholder="Insira seu E-mail" type="email" name="email" class="mb-5"/>
                         <el-input v-model="password" size="large" placeholder="Insira sua senha" type="password" class="mb-5" name="password" show-password/>
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between mb-5">
                             <el-link class="text-white fill-white after:border-white" href="/">
                                 Voltar
                             </el-link>
                             <el-button size="large" color="#10d38d" dark plain>Entrar</el-button>
+                        </div>
+                        <div class="flex justify-end">
+                            <el-link class="text-secondary fill-white after:border-secondary" href="/">Recuperar senha</el-link>
                         </div>
                     </div>
                 </div>
@@ -55,13 +58,9 @@
 }
 .bg-gradient-primary{
     background: hsla(159, 75%, 35%, 1);
-
-background: linear-gradient(45deg, hsla(159, 75%, 35%, 1) 0%, hsla(160, 66%, 29%, 1) 56%, hsla(161, 58%, 25%, 1) 74%, hsla(164, 46%, 21%, 1) 100%);
-
-background: -moz-linear-gradient(45deg, hsla(159, 75%, 35%, 1) 0%, hsla(160, 66%, 29%, 1) 56%, hsla(161, 58%, 25%, 1) 74%, hsla(164, 46%, 21%, 1) 100%);
-
-background: -webkit-linear-gradient(45deg, hsla(159, 75%, 35%, 1) 0%, hsla(160, 66%, 29%, 1) 56%, hsla(161, 58%, 25%, 1) 74%, hsla(164, 46%, 21%, 1) 100%);
-
-filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#169C6E", endColorstr="#197B5B", GradientType=1 );
+    background: linear-gradient(45deg, hsla(159, 75%, 35%, 1) 0%, hsla(160, 66%, 29%, 1) 56%, hsla(161, 58%, 25%, 1) 74%, hsla(164, 46%, 21%, 1) 100%);
+    background: -moz-linear-gradient(45deg, hsla(159, 75%, 35%, 1) 0%, hsla(160, 66%, 29%, 1) 56%, hsla(161, 58%, 25%, 1) 74%, hsla(164, 46%, 21%, 1) 100%);
+    background: -webkit-linear-gradient(45deg, hsla(159, 75%, 35%, 1) 0%, hsla(160, 66%, 29%, 1) 56%, hsla(161, 58%, 25%, 1) 74%, hsla(164, 46%, 21%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#169C6E", endColorstr="#197B5B", GradientType=1 );
 }
 </style>

@@ -103,6 +103,7 @@
 <script setup lang="ts">
     definePageMeta({
         layout:'side-nav',
-        path:'/'
+        path:'/',
+        middleware:'auth'
     })
 </script>
