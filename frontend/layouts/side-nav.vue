@@ -34,7 +34,7 @@
             Home
           </div>
           <div>
-            <el-dropdown>
+            <el-dropdown trigger="click">
               <span class="el-dropdown-divnk flex items-center">
                 <el-icon class="text-3xl fill-white">
                   <icons-circle-user />

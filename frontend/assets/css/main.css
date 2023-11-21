@@ -1,1 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root{
+ --dark:#212529;
+ --secondary:#10d38d;
+ --primary:#1f2937;
+}
+
+.el-dropdown-menu{
+    background-color: var(--dark) !important;
+}
+
+.el-dropdown-menu__item{
+    color:#fff !important
+}
+
+.el-dropdown-menu__item:not(.is-disabled):focus {
+    background-color: #181b1e !important;
+}
