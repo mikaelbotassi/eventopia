@@ -57,7 +57,11 @@ class UserController extends Controller
                 return response()->json(['message' => 'User created successfully'])->setStatusCode(200);
             return response()->json(['message' => 'Unable to save user data'])->setStatusCode(200);
         }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ])->setStatusCode(500);
         }
     }
 
