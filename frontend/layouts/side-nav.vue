@@ -51,7 +51,7 @@
                     </el-icon>
                     Ver perfil
                   </el-dropdown-item>
-                  <el-dropdown-item>
+                  <el-dropdown-item @click="doLogout()">
                     <el-icon>
                       <icons-arrow-right-from-bracket/>
                     </el-icon>
@@ -69,10 +69,20 @@
 </template>
 
 <script setup lang="ts">
+
   let isCollapse = ref(true)
+
+  const { logUserOut } = useAuthStore();
+  const router = useRouter();
+
   const toggleSidebar = () => {
     isCollapse.value = !isCollapse.value
   }
+
+  const doLogout = () => {
+    logUserOut();
+    router.push('/login');
+  };
 </script>
 
 <style scoped>

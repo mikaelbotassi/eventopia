@@ -78,6 +78,13 @@ Para saber mais comando dos artisan pesquise na <a href="https://laravel.com/doc
 $ sail -h
 ````
 
+Por fim agora é necessário sua JWT secret, para fazer isto basta executar o comando:
+````
+$ sail artisan jwt:secret
+````
+
+Obs: Caso seu Docker esteja dando problema de permissão ou com o Daemon veja este link: <a href="https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue">StackOverflow: How to Fix Docker</a>
+
 ### Stitcher.io
 
 <a href="https://stitcher.io/blog/laravel-beyond-crud-01-domain-oriented-laravel" target="_blank">01. Domain oriented Laravel</a>
