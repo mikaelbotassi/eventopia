@@ -66,6 +66,8 @@ class UserService
 
         $obj->save();
 
+        if(!$categories) return true;
+
         foreach ($categories as $key => $arrObj){
             $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
         }

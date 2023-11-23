@@ -15,7 +15,7 @@
                             <el-link class="text-white fill-white after:border-white" href="/">
                                 Voltar
                             </el-link>
-                            <el-button size="large" color="#10d38d" dark plain>Entrar</el-button>
+                            <el-button size="large" color="#10d38d" @click="doLogin()" dark plain>Entrar</el-button>
                         </div>
                         <div class="flex justify-end">
                             <el-link class="text-secondary fill-white after:border-secondary" href="/">Recuperar senha</el-link>
@@ -42,11 +42,30 @@
     </div>
 </template>
 <script setup lang="ts">
+
     definePageMeta({
         layout:'default',
+        middleware: 'auth'
     })
+    
+    const { authenticateUser } = useAuthStore();
+    const { isAuth } = storeToRefs(useAuthStore());
+
+    const router = useRouter();
+
     const email = ref('');
     const password = ref('');
+
+    const doLogin = async () => {
+        await authenticateUser({
+            email: email.value,
+            password: password.value
+        });
+        if (isAuth) {
+            router.push('/');
+        }
+    };
+
 </script>
 <style scoped>
 .bg-gradient-login{

@@ -25,6 +25,7 @@
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.2",
     "pinia": "^2.1.7",
+    "sweetalert2": "^11.10.1",
     "tailwindcss": "^3.3.5"
   }
 }
