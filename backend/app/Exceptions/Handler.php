@@ -26,27 +26,44 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        //
     }
 
     public function render($request, Throwable $e):JsonResponse
     {
+        
         if($e instanceof ValidationException){
             return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
                 'error' => $e->errors(),
             ])->setStatusCode(422);
         }
-
+        
         if($e instanceof MethodNotAllowedException){
             return response()->json([
+                'status' => 'error',
+                'message' => 'O método solicitado não é uma operação válida',
                 'error' => $e->getMessage()
             ])->setStatusCode(405);
         }
 
+        if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'É necessário fazer login para realizar esta operação',
+                'error' => $e->getMessage(),
+            ])->setStatusCode(401);
+        }
+
         return response()->json([
-            'error' => $e->getMessage(),
+            'status' => 'error',
             'file' => $e->getFile(),
             'line' => $e->getLine(),
+            'message' => 'Ocorreu um erro durante o processamento da solicitação, contate nosso suporte técnico',  
+            'error' => [
+                'code' => 500,
+                'description' => 'Ocorreu um erro interno do servidor'
+            ]
         ])->setStatusCode(500);
     }
 

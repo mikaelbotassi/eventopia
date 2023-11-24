@@ -11,8 +11,7 @@ export default defineNuxtRouteMiddleware((to) => {
     }
 
     if(token.value && hasExpired()){
-        token.value = null;
-        return navigateTo('/login')
+        return navigateTo('/logout')
     }
 
     // if token exists and url is /login redirect to homepage

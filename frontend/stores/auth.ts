@@ -20,15 +20,11 @@ export const useAuthStore = defineStore('auth', () => {
         password
     }).then(
       (resp) => {
-        toastSuccess("Login efetuado com sucesso!");
         const token = useCookie('token');
         token.value = resp.data;
         isAuth.value = true;
       }
     )
-    .catch((err) => {
-      toastError(err.response.data.error)
-    })
     .finally(() => {
       loading.value = false;
     })
@@ -41,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function hasExpired(){
-    const token = useCookie('token');
+    const token:any = useCookie('token');
     let finalDate = token.value?.expiration_time;
     finalDate = new Date(finalDate);
     if(finalDate < new Date()) return true;

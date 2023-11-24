@@ -1,6 +1,4 @@
-import axios from "axios";
 import { defineStore } from "pinia";
-import { useRouter } from "vue-router";
 import type { CreateUser } from "~/models/user/User";
 import { toastError } from "~/utils/sweet-alert";
 
@@ -11,14 +9,7 @@ export const useUserStore = defineStore('user', () => {
   async function registerUser(user:CreateUser) {
     loading.value = true;
     const {$api} = useNuxtApp();
-    await $api.post('/user', user).then(
-      (resp) => {
-        toastSuccess(resp.data.message)
-      }
-    )
-    .catch((err) => {
-      toastError(err.response.data.error)
-    })
+    await $api.post('/user', user)
     .finally(() => {
       loading.value = false;
     })
@@ -27,6 +18,7 @@ export const useUserStore = defineStore('user', () => {
   return {
     loading,
     registerUser,
+    user
   }
 
 });

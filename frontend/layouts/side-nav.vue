@@ -13,11 +13,7 @@
         <el-icon class="fill-white"><icons-house /></el-icon>
         <template #title>Home</template>
       </el-menu-item>
-      <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="2">
-        <el-icon class="fill-white"><icons-plus-square /></el-icon>
-        <template #title>Adicionar</template>
-      </el-menu-item>
-      <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="3">
+      <el-menu-item @click="isOpen = !isOpen" class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="2">
         <el-icon class="fill-white"><icons-plus-square /></el-icon>
         <template #title>Adicionar</template>
       </el-menu-item>
@@ -66,11 +62,20 @@
       <slot></slot>
     </div>
   </div>
+
+  <component :is="isOpen ? eventModal : 'div'" @save="isOpen = false" @close="isOpen = false" />
+
 </template>
 
 <script setup lang="ts">
 
   let isCollapse = ref(true)
+
+  const { $swal } = useNuxtApp()
+
+  const eventModal = shallowRef(resolveComponent('EventsEventModalForm'));
+
+  const isOpen = ref(false);
 
   const { logUserOut } = useAuthStore();
   const router = useRouter();

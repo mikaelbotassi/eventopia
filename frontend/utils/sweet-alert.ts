@@ -13,15 +13,22 @@ export const Toast = Swal.mixin({
 });
 
 export const toastSuccess = (message:string) => {
-    Toast.fire({
-        icon:"success",
-        title:message
-    });
+  Toast.fire({
+      icon:"success",
+      title:message
+  });
 }
 
 export const toastError = (message:string) => {
-    Toast.fire({
-        icon:"error",
-        title:message
-    });
+  Toast.fire({
+      icon:"error",
+      title:message
+  });
+}
+
+export const toastWarning = (message:string) => {
+  Toast.fire({
+      icon:"warning",
+      title:message
+  });
 }

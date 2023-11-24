@@ -45,11 +45,6 @@ class CreateEventDTO extends DTO
                 'required',
                 'after:yesterday',
             ],
-            'owner' => [
-                'integer',
-                'required',
-                'exists:users,id',
-            ],
         ]);
     }
 

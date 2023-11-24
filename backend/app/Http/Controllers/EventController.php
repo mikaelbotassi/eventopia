@@ -21,60 +21,45 @@ class EventController extends Controller
 
     public function getById($id):JsonResponse
     {
-        try {
-            $obj = $this->eventService->findById($id);
-            return response()->json([
-                'data' => $obj
-            ])->setStatusCode(200);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        $obj = $this->eventService->findById($id);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Dados obtidos com sucesso',
+            'data' => $obj
+        ])->setStatusCode(200);
     }
 
     public function getAll():JsonResponse
     {
-        try {
-            $objs = $this->eventService->getAll(new EventDTO());
-            return response()->json([
-                'qtt' => $objs->count(),
-                'data' => $objs
-            ])->setStatusCode(200);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        $objs = $this->eventService->getAll(new EventDTO());
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Dados obtidos com sucesso',
+            'qtt' => $objs->count(),
+            'data' => $objs
+        ])->setStatusCode(200);
     }
 
     public function create(Request $request):JsonResponse
     {
-        try {
-            if($this->eventService->create(CreateEventDTO::makeFromRequest($request)))
-                return response()->json(['message' => 'Event created successfully'])->setStatusCode(200);
-            return response()->json(['message' => 'Unable to save Event data'])->setStatusCode(400);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        if($this->eventService->create(CreateEventDTO::makeFromRequest($request)))
+            return response()->json(['message' => 'Evento criado com sucesso'])->setStatusCode(200);
+
+        return response()->json(['message' => 'Não foi possível salvar os dados'])->setStatusCode(400);
     }
 
     public function update(Request $request, $id):JsonResponse
     {
-        try {
-            if($this->eventService->update(UpdateEventDTO::makeFromRequest($request), $id))
-                return response()->json(['message' => 'Event updated successfully'])->setStatusCode(200);
-            return response()->json(['message' => 'Unable to save Event data'])->setStatusCode(400);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        if($this->eventService->update(UpdateEventDTO::makeFromRequest($request), $id))
+            return response()->json(['message' => 'Evento alterado com sucesso'])->setStatusCode(200);
+        return response()->json(['message' => 'Não foi possível alterar o evento no momento, tente novamente mais tarde'])->setStatusCode(400);
     }
 
     public function delete($id):JsonResponse
     {
-        try {
-            if($this->eventService->delete($id))
-                return response()->json(['message' => 'Event deleted successfully'])->setStatusCode(200);
-            return response()->json(['message' => 'Unable to save Event data'])->setStatusCode(400);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        if($this->eventService->delete($id))
+            return response()->json(['message' => 'Evento deletado com sucesso'])->setStatusCode(200);
+        return response()->json(['message' => 'Não foi possível deletar o evento no momento, tente novamente mais tarde'])->setStatusCode(400);
     }
 
 }
