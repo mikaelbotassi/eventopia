@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 class EventDTO extends DTO
 {
     public int|null $id;
+    public string|null $title;
     public string|null $event_date;
     public string|null $localization;
     public string|null $urlLocalization;

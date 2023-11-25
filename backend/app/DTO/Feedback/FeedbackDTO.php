@@ -2,7 +2,6 @@
 
 namespace App\DTO\Feedback;
 use App\DTO\DTO;
-use App\Models\Category;
 use App\Models\Event;
 use App\Models\User;
 

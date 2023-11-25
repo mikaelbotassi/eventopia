@@ -7,7 +7,8 @@
                 </div>
                 <p class="text-white text-3xl mb-5">Insira seus dados abaixo.</p>
                 <div class="grid w-full grid-cols-2 gap-4 mb-5">
-                    <el-input v-model="user.name" size="large" placeholder="Insira seu nome completo" type="text" name="fullname"/>
+                    <el-input v-model="user.name" class="col-span-2" size="large" placeholder="Insira seu nome completo" type="text" name="fullname"/>
+                    <el-input v-model="user.cpf_cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" size="large" placeholder="Insira seu CPF ou CNPJ" type="text"/>
                     <el-input v-model="user.email" size="large" placeholder="Insira seu E-mail" type="email" name="email"/>
                     <el-input v-model="user.password" size="large" placeholder="Insira sua senha" type="password" name="password" show-password/>
                     <el-date-picker
@@ -23,7 +24,7 @@
                     <el-link class="text-white fill-white after:border-white" href="/login">
                         Voltar
                     </el-link>
-                    <el-button size="large" color="#10d38d" @click="doSingUp()" dark plain>Enviar</el-button>
+                    <el-button size="large" :loading="loading" color="#10d38d" @click="doSingUp()" dark plain>Enviar</el-button>
                 </div>
             </div>
         </div>
@@ -33,15 +34,17 @@
     import { CreateUser } from '~/models/user/User';
     definePageMeta({
         layout:'default',
-        middleware: 'auth'
     })
     
     const { registerUser } = useUserStore();
+    const { loading } = storeToRefs(useUserStore());
 
     const user = reactive(new CreateUser());
 
-    const doSingUp = async () => {
-        await registerUser(user);
+    const doSingUp = () => {
+        (async function() {
+            if(await registerUser(user)) useRouter().push('/login');
+        })();
     };
 
 </script>

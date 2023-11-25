@@ -50,7 +50,7 @@ export default defineNuxtPlugin(async () => {
                     case 403:
                         if(route.name !== 'login'){
                             router.replace({
-                                path: "/logout"
+                                path: "/"
                             });
                         }
                         break;

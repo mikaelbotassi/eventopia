@@ -8,6 +8,7 @@ class CreateUserDTO extends DTO
 {
     public string|null $name;
     public string|null $email;
+    public string|null $cpf_cnpj;
     public string|null $password;
     public string|null $birth;
     public array|null $categories = [];
@@ -20,6 +21,12 @@ class CreateUserDTO extends DTO
                 'string',
                 'min:3',
                 'max:255'
+            ],
+            'cpf_cnpj' => [
+                'required',
+                'string',
+                'min:11',
+                'max:20'
             ],
             'email' => [
                 'required',

@@ -17,3 +17,17 @@ export class CreateEvent{
         this.registration_validity = '';
     }
 }
+
+export class ListEvent{
+    title:string;
+    event_date:string;
+    localization:string;
+    description:string;
+
+    constructor(){
+        this.title = '';
+        this.event_date = '';
+        this.localization = '';
+        this.description = '';
+    }
+}

@@ -7,6 +7,7 @@ use App\Models\Category;
 class CreateEventDTO extends DTO
 {
     public string|null $event_date;
+    public string|null $title;
     public string|null $localization;
     public string|null $urlLocalization;
     public string|null $description;

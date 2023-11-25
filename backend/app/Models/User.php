@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @property string id
  * @property string name
+ * @property string cpf_cnpj
  * @property string email
  * @property string password
  * @property int[] categories
