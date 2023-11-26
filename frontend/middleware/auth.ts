@@ -1,8 +1,8 @@
 import { useAuthStore } from "~/stores/auth"
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
     const { isAuth } = storeToRefs(useAuthStore()); // make authenticated state reactive
-    const {hasExpired, logUserOut} = useAuthStore();
+    const {hasExpired, refreshToken} = useAuthStore();
     const token = useCookie('token'); // get token from cookies
 
     if (token.value && !hasExpired()) {
@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware((to) => {
     }
 
     if(token.value && hasExpired()){
-        return navigateTo('/logout')
+        refreshToken()
     }
 
     // if token exists and url is /login redirect to homepage
