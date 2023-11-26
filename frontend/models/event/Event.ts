@@ -19,12 +19,14 @@ export class CreateEvent{
 }
 
 export class ListEvent{
+    id:number|null;
     title:string;
     event_date:string;
     localization:string;
     description:string;
 
     constructor(){
+        this.id = null;
         this.title = '';
         this.event_date = '';
         this.localization = '';
