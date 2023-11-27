@@ -10,26 +10,21 @@
       </el-menu-item>
       <el-divider class="opacity-25 border-secondary"></el-divider>
       <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1">
-        <NuxtLink :to="'/'">
-          <el-icon class="fill-white"><icons-house /></el-icon>
-          <el-link #title>Home</el-link>
-        </NuxtLink>
+        <el-icon class="fill-white"><icons-house /></el-icon>
+        <template #title>Home</template>
       </el-menu-item>
       <el-menu-item @click="isOpen = !isOpen" class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="2">
         <el-icon class="fill-white"><icons-plus-square /></el-icon>
         <template #title>Adicionar</template>
       </el-menu-item>
     </el-menu>
-    <div class="container mx-auto p-5 flex flex-col items-center justify-center w-full">
+    <div class="container mx-auto p-5 flex flex-col items-center justify-start gap-10 w-full">
       <header class="mb-5 w-full flex items-center justify-center">
         <div class="w-full flex items-center justify-between">
           <div class="flex items-center gap-10">
             <button @click="toggleSidebar()" class="text-3xl fill-secondary">
               <icons-bars-staggered/>
             </button>
-          </div>
-          <div class="text-white font-bold text-3xl">
-            Home
           </div>
           <div>
             <el-dropdown trigger="click">
