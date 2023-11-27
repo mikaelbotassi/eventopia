@@ -18,11 +18,11 @@
 }
 
 .spinner > div {
- background-color: rgb(0, 158, 247, .2);
+ background-color: rgb(16 211 141 / .25) !important;
  height: 100%;
  position: absolute;
  width: 100%;
- border: 2px solid #009EF7;
+ border: 2px solid rgb(16 211 141 / 1) !important;
 }
 
 .spinner div:nth-of-type(1) {

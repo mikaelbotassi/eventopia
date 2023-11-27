@@ -1,3 +1,5 @@
+import { OwnerUser } from "../user/User";
+
 export class CreateEvent{
     title:string;
     event_date:string;
@@ -31,5 +33,23 @@ export class ListEvent{
         this.event_date = '';
         this.localization = '';
         this.description = '';
+    }
+}
+
+export class OneEvent{
+    id:number|null;
+    title:string;
+    event_date:string;
+    localization:string;
+    description:string;
+    ownerObj:OwnerUser;
+
+    constructor(){
+        this.id = null;
+        this.title = '';
+        this.event_date = '';
+        this.localization = '';
+        this.description = '';
+        this.ownerObj = new OwnerUser();
     }
 }

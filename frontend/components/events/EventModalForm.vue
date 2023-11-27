@@ -3,7 +3,7 @@
     <form @submit.prevent="formSave()">
       <modal-header>
         <h4>Criar novo evento</h4>
-        <button type="button"><icons-xmark/></button>
+        <button type="button" @click="closeModal"><icons-xmark/></button>
       </modal-header>
       <modal-body>
         <div class="flex flex-wrap">
