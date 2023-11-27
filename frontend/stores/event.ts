@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { type ListEvent, type CreateEvent, type OneEvent } from '~/models/event/Event';
+import { type ListEvent, type CreateEvent, type OneEvent, type UpdateEvent } from '~/models/event/Event';
 
 export const useEventStore = defineStore('event', () => {
   const loading = ref(false);
@@ -16,6 +16,21 @@ export const useEventStore = defineStore('event', () => {
       loading.value = false;
     });
     return succcess
+  }
+
+  async function update(obj:UpdateEvent, id:string|number){
+    loading.value = true;
+    let succcess = false;
+    const {$api} = useNuxtApp();
+    return await $api.put('/event/' + id, obj)
+    .then((resp) => {
+      getById(id);
+      return true;
+    })
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
   }
 
   async function compareOwner(){
@@ -38,6 +53,17 @@ export const useEventStore = defineStore('event', () => {
       loading.value = false;
     });
     return succcess
+  }
+  
+  async function deleteById(id:string|number){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.delete('/event/' + id)
+    .then(() => true)
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
   }
 
   async function getById(id:string|number){
@@ -62,7 +88,9 @@ export const useEventStore = defineStore('event', () => {
     entity,
     getAll,
     getById,
-    compareOwner
+    compareOwner,
+    update,
+    deleteById
   }
 
 })

@@ -67,17 +67,35 @@
 </template>
 
 <script lang="ts" setup>
-  import { CreateEvent } from '~/models/event/Event';
-  const obj = reactive(new CreateEvent());
-  const { create } = useEventStore();
-  const {loading} = storeToRefs(useEventStore());
+
+  import { CreateEvent, UpdateEvent } from '~/models/event/Event';
+  import { cast } from '~/utils/index.ts'
+
+  const props = defineProps({
+    entityId:{
+      type: Number,
+      required: false,
+      default: 0
+    }
+  });
+
+  console.log(props.entityId);
+
+  const { create, update, getById } = useEventStore();
+  const {loading,entity} = storeToRefs(useEventStore());
   const emit = defineEmits(['save','close']);
+
+  const obj = props.entityId <= 0 ? reactive(new CreateEvent()) : reactive(cast(new UpdateEvent(), entity.value));
 
   const closeModal = () => emit('close')
 
   function formSave(){
     (async function() {
-      if(await create(obj)) emit('save')
+      if(props.entityId > 0){
+        if(await update(obj, props.entityId)) emit('save')
+      }else{
+        if(await create(obj)) emit('save')
+      }
     })();
   }
 

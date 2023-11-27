@@ -9,7 +9,7 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item class="fill-white flex items-center gap-3">
+                            <el-dropdown-item @click.prevent="openUpdate=true" class="fill-white flex items-center gap-3">
                                 <icons-pencil />
                                 Editar
                             </el-dropdown-item>
@@ -44,6 +44,8 @@
     <div class="flex items-center justify-center p-5" v-else>
         <LoadersCubeLoader />
     </div>
+    <component :entityId="entity.id" :is="openUpdate ? eventUpdate : 'div'" @save="openUpdate = false" @close="openUpdate = false" />
+    
 </template>
 <script setup lang="ts">
     definePageMeta({
@@ -52,6 +54,12 @@
     })
     const isOwner = ref(false);
     const route = useRoute();
+
+    const { getAll } = useEventStore();
+
+    const eventUpdate = shallowRef(resolveComponent('EventsEventModalForm'));
+
+    const openUpdate = ref(false);
 
     const {getById, compareOwner} = useEventStore();
 

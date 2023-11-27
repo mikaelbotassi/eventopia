@@ -17,9 +17,8 @@ class UpdateEventDTO extends DTO
     {
         parent::__construct([
             'event_date' => [
-                'datetime',
+                'date',
                 'nullable',
-                'after:yesterday'
             ],
             'localization' => [
                 'string',
@@ -42,9 +41,8 @@ class UpdateEventDTO extends DTO
                 'gt:0'
             ],
             'registration_validity' => [
-                'datetime',
+                'date',
                 'nullable',
-                'after:yesterday',
             ],
             'owner' => [
                 'integer',

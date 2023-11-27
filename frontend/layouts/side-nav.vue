@@ -9,7 +9,7 @@
           <img src="~/assets/img/brand.png" class="w-[75px]" />
       </el-menu-item>
       <el-divider class="opacity-25 border-secondary"></el-divider>
-      <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1">
+      <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1" @click="$router.push('/')">
         <el-icon class="fill-white"><icons-house /></el-icon>
         <template #title>Home</template>
       </el-menu-item>
@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <component :is="isOpen ? eventModal : 'div'" @save="refreshList" @close="isOpen = false" />
+  <component :is="isOpen ? eventModal : 'div'" @save="isOpen = false" @close="isOpen = false" />
 
 </template>
 
@@ -77,11 +77,6 @@
 
   const { logUserOut } = useAuthStore();
   const router = useRouter();
-
-  function refreshList(){
-    isOpen.value = !isOpen.value;
-    getAll();
-  }
 
   const toggleSidebar = () => {
     isCollapse.value = !isCollapse.value
