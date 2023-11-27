@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->dateTime('event_date');
             $table->string('title');
-            $table->text('img');
+            $table->text('img')->nullable();
             $table->string('localization');
             $table->text('urlLocalization');
             $table->text('description');

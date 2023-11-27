@@ -9,6 +9,7 @@ class UserDTO extends DTO
 {
     public string|null $name;
     public string|null $email;
+    public string|null $cpf_cnpj;
     public string|null $birth;
 
     public array|null $categories = [];

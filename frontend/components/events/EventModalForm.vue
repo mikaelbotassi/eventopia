@@ -75,10 +75,10 @@
 
   const closeModal = () => emit('close')
 
-  async function formSave(){
-    const resp = await create(obj)
-    return false;
-    // if(resp) emit('save')
+  function formSave(){
+    (async function() {
+      if(await create(obj)) emit('save')
+    })();
   }
 
 </script>

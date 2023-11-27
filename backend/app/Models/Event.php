@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @property int id
  * @property string event_date
+ * @property string title
  * @property string localization
  * @property string urlLocalization
  * @property string description

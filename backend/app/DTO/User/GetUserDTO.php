@@ -10,7 +10,7 @@ class GetUserDTO extends DTO
     public string|null $name;
     public string|null $email;
     public string|null $birth;
-
+    public string|null $cpf_cnpj;
     public Collection|null $categories = null;
     public Collection|null $feedbacks = null;
     public Collection|null $certificates = null;

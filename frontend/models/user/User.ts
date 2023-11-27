@@ -1,10 +1,12 @@
 export class CreateUser{
     name: string;
+    cpf_cnpj: string;
     email: string;
     password: string;
     birth: string;
     constructor() {
         this.name = "";
+        this.cpf_cnpj = "";
         this.email = "";
         this.password = "";
         this.birth = '';

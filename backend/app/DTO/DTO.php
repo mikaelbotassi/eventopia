@@ -38,7 +38,6 @@ abstract class DTO
             $objDto = new $dtoClass();
             foreach (get_class_vars($dtoClass) as $key => $var){
                 if(property_exists($objDto, $key) && isset($value->$key)){
-//                    if($key = "owner") dd($value->$key);
                     $objDto->$key = $value->$key;
                 }
             }

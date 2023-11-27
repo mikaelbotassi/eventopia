@@ -8,11 +8,14 @@ export const useUserStore = defineStore('user', () => {
 
   async function registerUser(user:CreateUser) {
     loading.value = true;
+    let sucess = false;
     const {$api} = useNuxtApp();
     await $api.post('/user', user)
+    .then(() => sucess = true)
     .finally(() => {
       loading.value = false;
     })
+    return sucess;
   }
 
   return {

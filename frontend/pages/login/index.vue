@@ -8,19 +8,23 @@
                     </div>
                     <h1 class="text-secondary text-3xl mb-5 font-bold">BEM VINDO AO <span class="text-white">EVENTOPIA</span>!</h1>
                     <p class="text-white mb-5">Digite seus dados abaixo.</p>
-                    <div>
+                    <form @submit.prevent="send">
                         <el-input v-model="email" size="large" placeholder="Insira seu E-mail" type="email" name="email" class="mb-5"/>
                         <el-input v-model="password" size="large" placeholder="Insira sua senha" type="password" class="mb-5" name="password" show-password/>
                         <div class="flex items-center justify-between mb-5">
                             <el-link class="text-white fill-white after:border-white" href="/">
                                 Voltar
                             </el-link>
-                            <el-button size="large" color="#10d38d" @click="doLogin()" dark plain>Entrar</el-button>
+                            <el-button size="large" native-type="submit" color="#10d38d" :loading="loading" dark plain>Entrar</el-button>
                         </div>
-                        <div class="flex justify-end">
+                        <!-- <div class="flex justify-end">
                             <el-link class="text-secondary fill-white after:border-secondary" href="/">Recuperar senha</el-link>
+                        </div> -->
+                        <el-divider class="my-10" content-position="center">Ou</el-divider>
+                        <div class="flex justify-center">
+                            <el-link class="text-secondary text-lg fill-white after:border-secondary" href="/sing-up">Criar conta</el-link>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="rounded-l-2xl hidden lg:block d-lg-block p-3 bg-secondary bg-opacity-50">
                         <div class="flex flex-col justify-between p-5 rounded-3 h-full">
@@ -49,21 +53,23 @@
     })
     
     const { authenticateUser } = useAuthStore();
-    const { isAuth } = storeToRefs(useAuthStore());
+    const { isAuth, loading } = storeToRefs(useAuthStore());
 
     const router = useRouter();
 
     const email = ref('');
     const password = ref('');
 
-    const doLogin = async () => {
-        await authenticateUser({
-            email: email.value,
-            password: password.value
-        });
-        if (isAuth) {
-            router.push('/');
-        }
+    const send = () => {
+        (async function() {
+            await authenticateUser({
+                email: email.value,
+                password: password.value
+            });
+            if (isAuth) {
+                router.push('/');
+            }
+        })();
     };
 
 </script>

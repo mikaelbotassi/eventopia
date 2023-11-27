@@ -22,10 +22,10 @@ export default defineNuxtPlugin(async () => {
     api.interceptors.response.use(
         response => {
             if (response.status === 200 || response.status === 201) {
-                toastSuccess(response.data.message);
+                if(response.data.message) toastSuccess(response.data.message);
                 return Promise.resolve(response);
             } else {
-                toastWarning(response?.data.message)
+                if(response?.data.message) toastWarning(response?.data.message)
                 return Promise.reject(response);
             }
         },
@@ -50,7 +50,7 @@ export default defineNuxtPlugin(async () => {
                     case 403:
                         if(route.name !== 'login'){
                             router.replace({
-                                path: "/logout"
+                                path: "/"
                             });
                         }
                         break;

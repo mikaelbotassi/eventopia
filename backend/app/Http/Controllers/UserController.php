@@ -21,48 +21,28 @@ class UserController extends Controller
 
     public function findById($id):JsonResponse
     {
-        try {
-            $obj = $this->userService->findById($id);
-            return response()->json(['data' => $obj])->setStatusCode(200);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        $obj = $this->userService->findById($id);
+        return response()->json(['data' => $obj])->setStatusCode(200);
     }
 
     public function me():JsonResponse
     {
-        try {
-            $obj = $this->userService->findById(auth()->id());
-            return response()->json(['data' => $obj])->setStatusCode(200);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        $obj = $this->userService->findById(auth()->id());
+        return response()->json(['data' => $obj])->setStatusCode(200);
     }
 
     public function update(Request $request):JsonResponse
     {
-        try {
-            if($this->userService->update(UpdateUserDTO::makeFromRequest($request)))
-                return response()->json(['message' => 'User updated successfully'])->setStatusCode(200);
-            return response()->json(['message' => 'Unable to save user data'])->setStatusCode(200);
-        }catch (Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        if($this->userService->update(UpdateUserDTO::makeFromRequest($request)))
+            return response()->json(['message' => 'Alterações efetuadas com sucesso!'])->setStatusCode(200);
+        return response()->json(['message' => 'Não foi possível salvar os dados, tente novamente.'])->setStatusCode(200);
     }
 
     public function create(Request $request):JsonResponse
     {
-        try {
-            if($this->userService->create(CreateUserDTO::makeFromRequest($request)))
-                return response()->json(['message' => 'User created successfully'])->setStatusCode(200);
-            return response()->json(['message' => 'Unable to save user data'])->setStatusCode(200);
-        }catch (Exception $e){
-            return response()->json([
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ])->setStatusCode(500);
-        }
+        if($this->userService->create(CreateUserDTO::makeFromRequest($request)))
+            return response()->json(['message' => 'Cadastro efetuado com sucesso!'])->setStatusCode(200);
+        return response()->json(['message' => 'Não foi possível salvar os dados, tente novamente.'])->setStatusCode(200);
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -37,7 +38,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, 'Login efetuado com sucesso');
     }
 
     /**
@@ -83,11 +84,11 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $message = ''): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
-            'message' => 'Login efetuado com sucesso!',
+            'message' => $message,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'expiration_time' => now()->addSeconds(auth()->factory()->getTTL() * 60),
