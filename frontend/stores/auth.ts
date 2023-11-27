@@ -1,6 +1,6 @@
-import axios from "axios";
 import { defineStore } from "pinia";
 import { useRouter } from "vue-router";
+import type { OwnerUser } from "~/models/user/User";
 
 interface UserPayloadInterface {
   email: string;
@@ -55,10 +55,15 @@ export const useAuthStore = defineStore('auth', () => {
       isAuth.value = true;
     })
     .catch((err) => {
-      console.log("🚀 ~ file: auth.ts:58 ~ refreshToken ~ err:", err)
       toastError('Sua sessão expirou, faça login novamente para utilizar nossos serviços.');
       useRouter().push('/logout');
     });
+  }
+
+  async function me(){
+    const {$api} = useNuxtApp();
+    const resp:any = await $api.get('/auth/me');
+    return resp.data.data as OwnerUser
   }
 
   return {
@@ -68,7 +73,8 @@ export const useAuthStore = defineStore('auth', () => {
     hasExpired,
     refreshToken,
     authenticateUser,
-    logUserOut
+    logUserOut,
+    me
   }
 
 });

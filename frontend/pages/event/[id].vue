@@ -1,18 +1,35 @@
 <template>
-    <div>
-        <article class="bg-gray-700 text-white relative shadow-lg rounded-xl overflow-hidden">
-            <div class="aspect-video">
+    <div v-if="!loading">
+        <article class="bg-gray-700 pb-10 text-white relative shadow-lg rounded-xl overflow-hidden">
+            <div class="aspect-video relative">
                 <img src="https://cdn.wallpapersafari.com/41/36/EwIcFb.jpg" alt="..." class="object-fit-cover" />
+                <el-dropdown v-if="isOwner" class="absolute top-10 right-10" trigger="click">
+                    <span class="el-dropdown-link bg-gray-700 px-4 py-2 rounded-full">
+                        <icons-ellipsis-vertical class="fill-white text-xl"/>
+                    </span>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item class="fill-white flex items-center gap-3">
+                                <icons-pencil />
+                                Editar
+                            </el-dropdown-item>
+                            <el-dropdown-item class="fill-white flex items-center gap-3">
+                                <icons-trash />
+                                Deletar
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
             </div>
             <div class="p-4 pt-2 event-card-body relative rounded-4" style="z-index:1">
-                <h1 class="font-bold text-xl mb-3">{{ entity.title }}</h1>
-                <div class="flex items-center justify-start gap-2 text-opacity-75 mb-2">
+                <h1 class="font-bold text-3xl mb-10">{{ entity.title }}</h1>
+                <div class="flex items-center justify-start gap-2 mb-2 text-opacity-75">
                     <span class="fill-white bg-white/25 px-2 py-1 rounded-lg">
                         <icons-pin/>
                     </span>
                     {{ entity.localization }}
                 </div>
-                <div class="flex items-center justify-start gap-2 mb-3">
+                <div class="flex items-center justify-start gap-2 mb-10">
                     <span class="bg-white/25 fill-white px-2 py-1 rounded-lg">
                         <icons-schedule/>
                     </span>
@@ -20,8 +37,12 @@
                 </div>
                 <p class="font-bold mb-0">Sobre</p>
                 <p class="mb-3">{{ entity.description }}</p>
+                <h2 class="font-bold mt-10 text-2xl">Comentários</h2>
             </div>
         </article>
+    </div>
+    <div class="flex items-center justify-center p-5" v-else>
+        <LoadersCubeLoader />
     </div>
 </template>
 <script setup lang="ts">
@@ -29,11 +50,15 @@
         layout:'side-nav',
         middleware:'auth'
     })
+    const isOwner = ref(false);
     const route = useRoute();
-    const {getById} = useEventStore();
-    const {entity} = storeToRefs(useEventStore());
-    onMounted(() => {
-        getById(route.params.id)
+
+    const {getById, compareOwner} = useEventStore();
+
+    const {entity, loading} = storeToRefs(useEventStore());
+    onMounted(async () => {
+        getById(route.params.id);
+        isOwner.value = await compareOwner()
     });
 </script>
 <style scoped>

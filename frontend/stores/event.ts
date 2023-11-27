@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { type ListEvent, type CreateEvent } from '~/models/event/Event';
+import { type ListEvent, type CreateEvent, type OneEvent } from '~/models/event/Event';
 
 export const useEventStore = defineStore('event', () => {
   const loading = ref(false);
   const entities = ref(new Array<ListEvent>());
-  const entity = ref(new Object() as ListEvent);
+  const entity = ref(new Object() as OneEvent);
 
   async function create(obj:CreateEvent){
     loading.value = true;
@@ -16,6 +16,13 @@ export const useEventStore = defineStore('event', () => {
       loading.value = false;
     });
     return succcess
+  }
+
+  async function compareOwner(){
+    const {me} = useAuthStore();
+    const user = await me();
+    if(user.id === entity.value.id) return true;
+    return false;
   }
   
   async function getAll(){
@@ -54,7 +61,8 @@ export const useEventStore = defineStore('event', () => {
     entities,
     entity,
     getAll,
-    getById
+    getById,
+    compareOwner
   }
 
 })
