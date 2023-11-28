@@ -45,4 +45,11 @@ class UserController extends Controller
         return response()->json(['message' => 'Não foi possível salvar os dados, tente novamente.'])->setStatusCode(200);
     }
 
+    public function delete():JsonResponse
+    {
+        if($this->userService->delete())
+            return response()->json(['message' => 'Conta deletada com sucesso'])->setStatusCode(200);
+        return response()->json(['message' => 'Não foi possível deletar sua conta no momento, tente novamente mais tarde'])->setStatusCode(400);
+    }
+
 }

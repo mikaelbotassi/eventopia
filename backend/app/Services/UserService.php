@@ -74,4 +74,9 @@ class UserService
         return true;
     }
 
+    public function delete():bool{
+        $obj = User::findByOrFail(auth()->id());
+        return $obj->delete();
+    }
+
 }

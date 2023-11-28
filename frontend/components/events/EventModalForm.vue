@@ -16,7 +16,7 @@
             <el-input v-model="obj.localization" size="large" placeholder="Insira a localização do evento" type="text"/>
           </el-form-item>
 
-          <el-form-item class="w-full lg:w-1/2 p-3" label="Local do evento">
+          <el-form-item class="w-full lg:w-1/2 p-3" label="Link do maps para o local do evento">
             <el-input v-model="obj.urlLocalization" size="large" placeholder="Insira o link do maps com o local" type="text"/>
           </el-form-item>
 
@@ -67,17 +67,33 @@
 </template>
 
 <script lang="ts" setup>
-  import { CreateEvent } from '~/models/event/Event';
-  const obj = reactive(new CreateEvent());
-  const { create } = useEventStore();
-  const {loading} = storeToRefs(useEventStore());
+
+  import { CreateEvent, UpdateEvent } from '~/models/event/Event';
+  import { cast } from '~/utils/index.ts'
+
+  const props = defineProps({
+    entityId:{
+      type: Number,
+      required: false,
+      default: 0
+    }
+  });
+
+  const { create, update, getById } = useEventStore();
+  const {loading,entity} = storeToRefs(useEventStore());
   const emit = defineEmits(['save','close']);
+
+  const obj = props.entityId <= 0 ? reactive(new CreateEvent()) : reactive(cast(new UpdateEvent(), entity.value));
 
   const closeModal = () => emit('close')
 
   function formSave(){
     (async function() {
-      if(await create(obj)) emit('save')
+      if(props.entityId > 0){
+        if(await update(obj, props.entityId)) emit('save')
+      }else{
+        if(await create(obj)) emit('save')
+      }
     })();
   }
 

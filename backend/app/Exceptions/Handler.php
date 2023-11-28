@@ -30,7 +30,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e):JsonResponse
     {
-        
+
         if($e instanceof ValidationException){
             return response()->json([
                 'status' => 'error',
@@ -38,7 +38,7 @@ class Handler extends ExceptionHandler
                 'error' => $e->errors(),
             ])->setStatusCode(422);
         }
-        
+
         if($e instanceof MethodNotAllowedException){
             return response()->json([
                 'status' => 'error',
@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
             'status' => 'error',
             'file' => $e->getFile(),
             'line' => $e->getLine(),
-            'message' => 'Ocorreu um erro durante o processamento da solicitação, contate nosso suporte técnico',  
+            'message' => 'Ocorreu um erro durante o processamento da solicitação, contate nosso suporte técnico',
             'error' => [
                 'code' => 500,
                 'description' => 'Ocorreu um erro interno do servidor'

@@ -1,27 +1,42 @@
 import { defineStore } from 'pinia'
-import { type ListEvent, type CreateEvent, type OneEvent } from '~/models/event/Event';
+import { type ListEvent, type CreateEvent, type OneEvent, type UpdateEvent } from '~/models/event/Event';
 
 export const useEventStore = defineStore('event', () => {
   const loading = ref(false);
   const entities = ref(new Array<ListEvent>());
+  const filteredEntities = ref(new Array<ListEvent>());
   const entity = ref(new Object() as OneEvent);
 
   async function create(obj:CreateEvent){
     loading.value = true;
-    let succcess = false;
     const {$api} = useNuxtApp();
-    await $api.post('/event', obj)
-    .then((resp) => succcess = true)
+    return await $api.post('/event', obj)
+    .then(() => true)
+    .catch(() => false)
     .finally(() => {
       loading.value = false;
     });
-    return succcess
+  }
+
+  async function update(obj:UpdateEvent, id:string|number){
+    loading.value = true;
+    let succcess = false;
+    const {$api} = useNuxtApp();
+    return await $api.put('/event/' + id, obj)
+    .then((resp) => {
+      getById(id);
+      return true;
+    })
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
   }
 
   async function compareOwner(){
     const {me} = useAuthStore();
     const user = await me();
-    if(user.id === entity.value.id) return true;
+    if(user.id === entity.value?.ownerObj?.id) return true;
     return false;
   }
   
@@ -38,6 +53,31 @@ export const useEventStore = defineStore('event', () => {
       loading.value = false;
     });
     return succcess
+  }
+
+  async function getAllByFilter(filter:[]){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.post('/event/filter', filter)
+    .then((resp) => {
+      filteredEntities.value = resp.data.data;
+      return true
+    })
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
+  }
+  
+  async function deleteById(id:string|number){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.delete('/event/' + id)
+    .then(() => true)
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
   }
 
   async function getById(id:string|number){
@@ -61,8 +101,12 @@ export const useEventStore = defineStore('event', () => {
     entities,
     entity,
     getAll,
+    getAllByFilter,
+    filteredEntities,
     getById,
-    compareOwner
+    compareOwner,
+    update,
+    deleteById
   }
 
 })

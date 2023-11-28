@@ -9,11 +9,11 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item class="fill-white flex items-center gap-3">
+                            <el-dropdown-item @click.prevent="openUpdate=true" class="fill-white flex items-center gap-3">
                                 <icons-pencil />
                                 Editar
                             </el-dropdown-item>
-                            <el-dropdown-item class="fill-white flex items-center gap-3">
+                            <el-dropdown-item @click.prevent="deleteEntity()" class="fill-white flex items-center gap-3">
                                 <icons-trash />
                                 Deletar
                             </el-dropdown-item>
@@ -44,6 +44,8 @@
     <div class="flex items-center justify-center p-5" v-else>
         <LoadersCubeLoader />
     </div>
+    <component :entityId="entity.id" :is="openUpdate ? eventUpdate : 'div'" @save="openUpdate = false" @close="openUpdate = false" />
+    
 </template>
 <script setup lang="ts">
     definePageMeta({
@@ -52,13 +54,43 @@
     })
     const isOwner = ref(false);
     const route = useRoute();
+    const router = useRouter();
 
-    const {getById, compareOwner} = useEventStore();
+    const {$swal} = useNuxtApp();
 
-    const {entity, loading} = storeToRefs(useEventStore());
+    const { getAll } = useEventStore();
+
+    const eventUpdate = shallowRef(resolveComponent('EventsEventModalForm'));
+
+    const openUpdate = ref(false);
+
+    const eventStore = useEventStore();
+
+    const {getById, compareOwner, deleteById} = eventStore;
+
+    const {entity, loading} = storeToRefs(eventStore);
+
+    const deleteEntity = () => {
+        $swal.fire({
+            title: "Deseja realmente deletar o evento?",
+            showCancelButton: true,
+            confirmButtonText: "Sim, deletar",
+            confirmButtonColor: "#10d38d",
+            denyButtonText: `Cancelar`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                if(await deleteById(route.params.id)) router.push('/');
+            }
+        });
+    }
+
+    isOwner.value = await useAsyncData(
+        'owner',
+        async () => await compareOwner()
+    );
+
     onMounted(async () => {
         getById(route.params.id);
-        isOwner.value = await compareOwner()
     });
 </script>
 <style scoped>
