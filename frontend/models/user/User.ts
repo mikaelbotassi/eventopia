@@ -38,3 +38,24 @@ export class OwnerUser{
     }
 
 }
+// public string|null $name;
+//     public string|null $email;
+//     public string|null $cpf_cnpj;
+//     public string|null $password;
+//     public string|null $birth;
+//     public array|null $categories = [];
+export class UpdateUser{
+    name: string;
+    cpf_cnpj: string;
+    email: string;
+    password: string;
+    birth: string;
+    constructor() {
+        this.name = "";
+        this.cpf_cnpj = "";
+        this.email = "";
+        this.password = "";
+        this.birth = '';
+    }
+
+}

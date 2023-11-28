@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId('owner')->constrained('users');
             $table->dateTime('registration_validity')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

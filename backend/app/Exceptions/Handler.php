@@ -55,6 +55,14 @@ class Handler extends ExceptionHandler
             ])->setStatusCode(401);
         }
 
+        if($e->getCode() == 403){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Você não tem autorização para realizar esta operação.',
+                'error' => $e->getMessage(),
+            ])->setStatusCode(403);
+        }
+
         return response()->json([
             'status' => 'error',
             'file' => $e->getFile(),

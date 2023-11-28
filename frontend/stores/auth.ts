@@ -23,6 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
         const token = useCookie('token');
         token.value = resp.data;
         isAuth.value = true;
+        toastSuccess(resp.data.message);
       }
     )
     .finally(() => {
@@ -34,15 +35,14 @@ export const useAuthStore = defineStore('auth', () => {
     const token = useCookie('token');
     isAuth.value = false;
     token.value = null;
+    toastSuccess("Usuário deslogado");
   }
 
   function hasExpired(){
     const token:any = useCookie('token');
     let finalDate = token.value?.expiration_time;
     finalDate = new Date(finalDate);
-    if(finalDate < new Date()){
-      return true;
-    }
+    if(finalDate < new Date()) return true;
     return false;
   }
 

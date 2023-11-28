@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Utils\Database\EloquentFindable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -25,7 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, EloquentFindable;
+
+    use HasApiTokens, HasFactory, Notifiable, EloquentFindable, SoftDeletes;
+    protected array $dates = ['deleted_at'];
 
     /**
      * The attributes that are mass assignable.
