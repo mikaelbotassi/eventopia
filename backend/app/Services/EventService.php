@@ -21,6 +21,17 @@ class EventService
 
     }
 
+    public function getAllWithFilter(array $filters):Collection{
+        $query = Event::query();
+
+        foreach ($filters as $filter){
+            $query->where($filter['column'],$filter['operator'],$filter['value']);
+        }
+
+        return EventDTO::toDTOs($query->get());
+
+    }
+
     public function findById(int $id):DTO{
         return EventDTO::toDTO(Event::findByOrFail($id));
     }

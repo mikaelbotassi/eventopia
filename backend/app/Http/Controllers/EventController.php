@@ -40,6 +40,17 @@ class EventController extends Controller
         ])->setStatusCode(200);
     }
 
+    public function getAllWithFilter(Request $request):JsonResponse
+    {
+        $objs = $this->eventService->getAllWithFilter($request->all());
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Dados obtidos com sucesso',
+            'qtt' => $objs->count(),
+            'data' => $objs
+        ])->setStatusCode(200);
+    }
+
     public function create(Request $request):JsonResponse
     {
         if($this->eventService->create(CreateEventDTO::makeFromRequest($request)))

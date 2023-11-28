@@ -38,7 +38,7 @@
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>
+                  <el-dropdown-item @click="$router.push('/profile')">
                     <el-icon>
                       <icons-user/>
                     </el-icon>

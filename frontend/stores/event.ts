@@ -4,6 +4,7 @@ import { type ListEvent, type CreateEvent, type OneEvent, type UpdateEvent } fro
 export const useEventStore = defineStore('event', () => {
   const loading = ref(false);
   const entities = ref(new Array<ListEvent>());
+  const filteredEntities = ref(new Array<ListEvent>());
   const entity = ref(new Object() as OneEvent);
 
   async function create(obj:CreateEvent){
@@ -53,6 +54,20 @@ export const useEventStore = defineStore('event', () => {
     });
     return succcess
   }
+
+  async function getAllByFilter(filter:[]){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.post('/event/filter', filter)
+    .then((resp) => {
+      filteredEntities.value = resp.data.data;
+      return true
+    })
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
+  }
   
   async function deleteById(id:string|number){
     loading.value = true;
@@ -86,6 +101,8 @@ export const useEventStore = defineStore('event', () => {
     entities,
     entity,
     getAll,
+    getAllByFilter,
+    filteredEntities,
     getById,
     compareOwner,
     update,

@@ -96,6 +96,7 @@ Route::group([
 
     Route::controller(EventController::class)->group(function (){
         Route::post('', 'create');
+        Route::post('/filter', 'getAllWithFilter');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
         Route::get('/{id}', 'getById');
