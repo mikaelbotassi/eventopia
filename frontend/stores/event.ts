@@ -8,14 +8,13 @@ export const useEventStore = defineStore('event', () => {
 
   async function create(obj:CreateEvent){
     loading.value = true;
-    let succcess = false;
     const {$api} = useNuxtApp();
-    await $api.post('/event', obj)
-    .then((resp) => succcess = true)
+    return await $api.post('/event', obj)
+    .then(() => true)
+    .catch(() => false)
     .finally(() => {
       loading.value = false;
     });
-    return succcess
   }
 
   async function update(obj:UpdateEvent, id:string|number){
@@ -36,7 +35,7 @@ export const useEventStore = defineStore('event', () => {
   async function compareOwner(){
     const {me} = useAuthStore();
     const user = await me();
-    if(user.id === entity.value.id) return true;
+    if(user.id === entity.value?.ownerObj?.id) return true;
     return false;
   }
   

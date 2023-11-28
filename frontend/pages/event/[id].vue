@@ -13,7 +13,7 @@
                                 <icons-pencil />
                                 Editar
                             </el-dropdown-item>
-                            <el-dropdown-item class="fill-white flex items-center gap-3">
+                            <el-dropdown-item @click.prevent="deleteEntity()" class="fill-white flex items-center gap-3">
                                 <icons-trash />
                                 Deletar
                             </el-dropdown-item>
@@ -54,6 +54,9 @@
     })
     const isOwner = ref(false);
     const route = useRoute();
+    const router = useRouter();
+
+    const {$swal} = useNuxtApp();
 
     const { getAll } = useEventStore();
 
@@ -61,12 +64,33 @@
 
     const openUpdate = ref(false);
 
-    const {getById, compareOwner} = useEventStore();
+    const eventStore = useEventStore();
 
-    const {entity, loading} = storeToRefs(useEventStore());
+    const {getById, compareOwner, deleteById} = eventStore;
+
+    const {entity, loading} = storeToRefs(eventStore);
+
+    const deleteEntity = () => {
+        $swal.fire({
+            title: "Deseja realmente deletar o evento?",
+            showCancelButton: true,
+            confirmButtonText: "Sim, deletar",
+            confirmButtonColor: "#10d38d",
+            denyButtonText: `Cancelar`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                if(await deleteById(route.params.id)) router.push('/');
+            }
+        });
+    }
+
+    isOwner.value = await useAsyncData(
+        'owner',
+        async () => await compareOwner()
+    );
+
     onMounted(async () => {
         getById(route.params.id);
-        isOwner.value = await compareOwner()
     });
 </script>
 <style scoped>
