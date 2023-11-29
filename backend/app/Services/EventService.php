@@ -53,7 +53,7 @@ class EventService
         $arr = $eventDto->toArray();
 
         if($obj->owner != auth()->id())
-            throw new Exception("You do not have privileges to perform this action", 401);
+            throw new Exception("You do not have privileges to perform this action", 403);
 
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
@@ -67,7 +67,7 @@ class EventService
         $obj = Event::findByOrFail($id);
 
         if($obj->owner != auth()->id())
-            throw new Exception("You do not have privileges to perform this action", 401);
+            throw new Exception("You do not have privileges to perform this action", 403);
 
         return $obj->delete();
     }

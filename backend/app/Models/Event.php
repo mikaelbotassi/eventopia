@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Utils\Database\EloquentFindable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int id
@@ -25,11 +26,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Event extends Model
 {
     protected $table = "events";
-    use EloquentFindable;
+    use EloquentFindable, SoftDeletes;
 
+    protected $dates = ['deleted_at'];
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function ownerObj():BelongsTo{
