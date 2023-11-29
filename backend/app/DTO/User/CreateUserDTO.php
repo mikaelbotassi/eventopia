@@ -39,6 +39,13 @@ class CreateUserDTO extends DTO
                 'string',
                 'max:20'
             ],
+            'categories' => [
+                'nullable',
+                'array'
+            ],
+            'categories.*.id' => [
+                'exists:categories,id'
+            ]
         ]);
     }
 

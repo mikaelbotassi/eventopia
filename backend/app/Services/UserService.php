@@ -32,6 +32,7 @@ class UserService
     public function update(DTO $user):bool{
         $obj = User::findByOrFail(auth()->user()->id);
         $arr = $user->toArray();
+
         $categories = null;
 
         if(isset($arr['categories'])){

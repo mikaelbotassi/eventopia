@@ -40,7 +40,7 @@ class UpdateUserDTO extends DTO
                 'nullable',
                 'string',
                 'max:20'
-            ],
+            ]
         ]);
     }
 

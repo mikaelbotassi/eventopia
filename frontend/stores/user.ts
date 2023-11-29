@@ -6,11 +6,12 @@ export const useUserStore = defineStore('user', () => {
   const user = ref(false);
   const loading = ref(false);
   const entity = ref(new Object() as OwnerUser);
+  const url = "/user/";
 
   async function registerUser(user:CreateUser) {
     loading.value = true;
     const {$api} = useNuxtApp();
-    return await $api.post('/user', user)
+    return await $api.post(url, user)
     .then((resp) => {
       toastSuccess(resp.data.message);
       return true
@@ -22,9 +23,10 @@ export const useUserStore = defineStore('user', () => {
   }
   
   async function update(user:UpdateUser) {
+    if(!(await confirmPassword())) return false;
     loading.value = true;
     const {$api} = useNuxtApp();
-    return await $api.put('/user', user)
+    return await $api.put(url, user)
     .then((resp) => {
       toastSuccess(resp.data.message);
       return true
@@ -35,6 +37,30 @@ export const useUserStore = defineStore('user', () => {
       entity.value = await me();
       loading.value = false;
     })
+  }
+
+  async function confirmPassword(){
+    const {$swal} :any = useNuxtApp();
+    const {validatePassword} = useAuthStore();
+    return $swal.fire({
+      title: "Confirme sua senha",
+      icon:"warning",
+      text: "Para realizar esta operação é necessário confirmar sua senha!",
+      input: "password",
+      showCancelButton: true,
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: "var(--secondary)",
+      cancelButtonText: "Cancelar",
+      cancelButtonColor: "#bb2124",
+      showLoaderOnConfirm: true,
+      preConfirm: async (password:string) => {
+          return await validatePassword(password);
+      },
+      allowOutsideClick: () => !$swal.isLoading()
+    }).then((result:any) => {
+      if (result.isConfirmed) return true;
+      return false;
+    });
   }
 
   async function getByToken(){
@@ -52,14 +78,21 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function deleteByToken(){
+    if(!(await confirmPassword())) return false;
     loading.value = true;
     const {$api} = useNuxtApp();
-    return await $api.delete('/user')
+    return await $api.delete(url)
     .then((resp) => {
       toastSuccess(resp.data.message);
       return true
     })
     .catch(() => false)
+  }
+
+  async function me(){
+    const {$api} = useNuxtApp();
+    const resp:any = await $api.get(`${url}me`);
+    return resp.data.data as OwnerUser
   }
 
   return {
@@ -70,7 +103,8 @@ export const useUserStore = defineStore('user', () => {
     entity,
     compareOwner,
     deleteByToken,
-    update
+    update,
+    me
   }
 
 });

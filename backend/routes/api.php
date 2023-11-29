@@ -28,6 +28,7 @@ Route::group([
 
     Route::controller(AuthController::class)->group(function (){
         Route::post('login', 'login');
+        Route::post('/validate-password', 'validatePassword');
         Route::get('logout', 'logout');
         Route::get('refresh', 'refresh');
         Route::get('me', 'me');
@@ -45,10 +46,10 @@ Route::group([
         Route::middleware('auth:api')->group(function (){
             Route::put('', 'update');
             Route::get('me', 'me');
+            Route::get('/{id}', 'findById');
+            Route::delete('', 'delete');
         });
         Route::post('', 'create');
-        Route::get('/{id}', 'findById');
-        Route::delete('', 'delete');
     });
 
 });
@@ -56,7 +57,6 @@ Route::group([
 Route::group([
 
     'prefix' => 'category',
-    'middleware' => 'auth:api'
 
 ], function ($router) {
 

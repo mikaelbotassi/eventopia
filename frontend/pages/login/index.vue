@@ -12,9 +12,9 @@
                         <el-input v-model="email" size="large" placeholder="Insira seu E-mail" type="email" name="email" class="mb-5"/>
                         <el-input v-model="password" size="large" placeholder="Insira sua senha" type="password" class="mb-5" name="password" show-password/>
                         <div class="flex items-center justify-between mb-5">
-                            <el-link class="text-white fill-white after:border-white" href="/">
+                            <NuxtLink class="text-white fill-white after:border-white" :to="'/'">
                                 Voltar
-                            </el-link>
+                            </NuxtLink>
                             <el-button size="large" native-type="submit" color="#10d38d" :loading="loading" dark plain>Entrar</el-button>
                         </div>
                         <!-- <div class="flex justify-end">
@@ -22,7 +22,7 @@
                         </div> -->
                         <el-divider class="my-10" content-position="center">Ou</el-divider>
                         <div class="flex justify-center">
-                            <el-link class="text-secondary text-lg fill-white after:border-secondary" href="/sing-up">Criar conta</el-link>
+                            <NuxtLink class="text-secondary text-lg fill-white after:border-secondary" :to="'/sing-up'">Criar conta</NuxtLink>
                         </div>
                     </form>
                 </div>
