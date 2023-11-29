@@ -68,9 +68,6 @@
 
   let isCollapse = ref(true)
 
-  const { $swal } = useNuxtApp()
-  const { getAll } = useEventStore();
-
   const eventModal = shallowRef(resolveComponent('EventsEventModalForm'));
 
   const isOpen = ref(false);

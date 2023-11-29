@@ -3,17 +3,17 @@
         <article class="bg-gray-700 pb-10 text-white relative shadow-lg rounded-xl overflow-hidden">
             <div class="aspect-video relative">
                 <img src="https://cdn.wallpapersafari.com/41/36/EwIcFb.jpg" alt="..." class="object-fit-cover" />
-                <el-dropdown v-if="isOwner" class="absolute top-10 right-10" trigger="click">
+                <el-dropdown v-show="isOwner" class="absolute top-10 right-10" trigger="click">
                     <span class="el-dropdown-link bg-gray-700 px-4 py-2 rounded-full">
                         <icons-ellipsis-vertical class="fill-white text-xl"/>
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item @click.prevent="openUpdate=true" class="fill-white flex items-center gap-3">
+                            <el-dropdown-item @click="openUpdate=true" class="fill-white flex items-center gap-3">
                                 <icons-pencil />
                                 Editar
                             </el-dropdown-item>
-                            <el-dropdown-item @click.prevent="deleteEntity()" class="fill-white flex items-center gap-3">
+                            <el-dropdown-item @click="deleteEntity()" class="fill-white flex items-center gap-3">
                                 <icons-trash />
                                 Deletar
                             </el-dropdown-item>
@@ -58,8 +58,6 @@
 
     const {$swal} = useNuxtApp();
 
-    const { getAll } = useEventStore();
-
     const eventUpdate = shallowRef(resolveComponent('EventsEventModalForm'));
 
     const openUpdate = ref(false);
@@ -77,21 +75,20 @@
             confirmButtonText: "Sim, deletar",
             confirmButtonColor: "#10d38d",
             denyButtonText: `Cancelar`
-        }).then(async (result) => {
+        }).then(async (result:any) => {
             if (result.isConfirmed) {
-                if(await deleteById(route.params.id)) router.push('/');
+                if(await deleteById(Number(route.params.id))) router.push('/');
             }
         });
     }
 
-    isOwner.value = await useAsyncData(
+    useAsyncData(
         'owner',
-        async () => await compareOwner()
+        async () => {
+            await getById(Number(route.params.id));
+            await compareOwner().then((resp) => isOwner.value = resp)
+        }
     );
-
-    onMounted(async () => {
-        getById(route.params.id);
-    });
 </script>
 <style scoped>
 .event-card-body::after{

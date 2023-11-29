@@ -11,7 +11,11 @@ export const useEventStore = defineStore('event', () => {
     loading.value = true;
     const {$api} = useNuxtApp();
     return await $api.post('/event', obj)
-    .then(() => true)
+    .then((resp) => {
+      toastSuccess(resp.data.message);
+      getAll();
+      return true
+    })
     .catch(() => false)
     .finally(() => {
       loading.value = false;
@@ -20,10 +24,10 @@ export const useEventStore = defineStore('event', () => {
 
   async function update(obj:UpdateEvent, id:string|number){
     loading.value = true;
-    let succcess = false;
     const {$api} = useNuxtApp();
     return await $api.put('/event/' + id, obj)
     .then((resp) => {
+      toastSuccess(resp.data.message);
       getById(id);
       return true;
     })
@@ -73,7 +77,10 @@ export const useEventStore = defineStore('event', () => {
     loading.value = true;
     const {$api} = useNuxtApp();
     return await $api.delete('/event/' + id)
-    .then(() => true)
+    .then((resp) => {
+      toastSuccess(resp.data.message);
+      return true
+    })
     .catch(() => false)
     .finally(() => {
       loading.value = false;
@@ -82,17 +89,16 @@ export const useEventStore = defineStore('event', () => {
 
   async function getById(id:string|number){
     loading.value = true;
-    let succcess = false;
     const {$api} = useNuxtApp();
-    await $api.get('/event/' + id)
+    return await $api.get('/event/' + id)
     .then((resp) => {
       entity.value = resp.data.data;
-      succcess = true
+      return true
     })
+    .catch(() => false)
     .finally(() => {
       loading.value = false;
     });
-    return succcess
   }
 
   return {

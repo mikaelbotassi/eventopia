@@ -3,6 +3,7 @@
 namespace App\DTO\User;
 use App\DTO\DTO;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\Rule;
 
 class UpdateUserDTO extends DTO
 {
@@ -23,7 +24,7 @@ class UpdateUserDTO extends DTO
                 'max:255'
             ],
             'cpf_cnpj' => [
-                'required',
+                'nullable',
                 'string',
                 'min:11',
                 'max:20'
@@ -32,10 +33,11 @@ class UpdateUserDTO extends DTO
                 'nullable',
                 'string',
                 'min:10',
-                'unique:users',
+                Rule::unique('users')->ignore(auth()->id()),
                 'max:191'
             ],
             'password' => [
+                'nullable',
                 'string',
                 'max:20'
             ],

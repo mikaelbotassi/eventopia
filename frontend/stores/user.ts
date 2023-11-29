@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { CreateUser } from "~/models/user/User";
+import type { CreateUser, UpdateUser } from "~/models/user/User";
 import { type OwnerUser } from '~/models/user/User';
 
 export const useUserStore = defineStore('user', () => {
@@ -9,21 +9,38 @@ export const useUserStore = defineStore('user', () => {
 
   async function registerUser(user:CreateUser) {
     loading.value = true;
-    let sucess = false;
     const {$api} = useNuxtApp();
-    await $api.post('/user', user)
-    .then(() => sucess = true)
+    return await $api.post('/user', user)
+    .then((resp) => {
+      toastSuccess(resp.data.message);
+      return true
+    })
+    .catch(() => false)
     .finally(() => {
       loading.value = false;
     })
-    return sucess;
+  }
+  
+  async function update(user:UpdateUser) {
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.put('/user', user)
+    .then((resp) => {
+      toastSuccess(resp.data.message);
+      return true
+    })
+    .catch(() => false)
+    .finally(async () => {
+      const {me} = useAuthStore();
+      entity.value = await me();
+      loading.value = false;
+    })
   }
 
   async function getByToken(){
     const {me} = useAuthStore();
     loading.value = true;
     entity.value = await me().finally(() => loading.value = false);
-    console.log("🚀 ~ file: user.ts:26 ~ getByToken ~ entity.value:", entity.value)
   }
 
   async function compareOwner(){
@@ -38,11 +55,11 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true;
     const {$api} = useNuxtApp();
     return await $api.delete('/user')
-    .then(() => true)
+    .then((resp) => {
+      toastSuccess(resp.data.message);
+      return true
+    })
     .catch(() => false)
-    .finally(() => {
-      loading.value = false;
-    });
   }
 
   return {
@@ -52,7 +69,8 @@ export const useUserStore = defineStore('user', () => {
     getByToken,
     entity,
     compareOwner,
-    deleteByToken
+    deleteByToken,
+    update
   }
 
 });
