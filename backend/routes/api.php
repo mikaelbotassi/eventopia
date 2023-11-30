@@ -119,7 +119,9 @@ Route::group([
         Route::post('', 'create');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
+        Route::get('/auth', 'getAllByAuthId');
         Route::get('/{id}', 'getById');
+        Route::post('/filter', 'getAllWithFilter');
         Route::get('', 'getAll');
         Route::get('qr-code/{registration_id}', 'getQrCode');
         Route::get('confirm-presence/{qrCode}', 'confirmPresence');

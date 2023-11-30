@@ -1,53 +1,40 @@
 import { defineStore } from 'pinia'
-import type Getfeedbacks from '~/models/feedback/GetFeedbacks';
-import type CreateFeedback from '~/models/feedback/CreateFeedback';
-import type UpdateFeedback from '~/models/feedback/UpdateFeedback';
+import type GetRegistration from '~/models/registration/GetRegistration';
+import type CreateRegistration from '~/models/registration/CreateRegistration';
 
-export const useFeedbackStore = defineStore('feedback', () => {
+export const useRegistrationStore = defineStore('registration', () => {
   const loading = ref(false);
-  const entities = ref(new Array<Getfeedbacks>());
+  const entities = ref(new Array<GetRegistration>());
+  const userRegistrations = ref(new Array<GetRegistration>());
   const qtt = ref(0);
-  const filteredEntities = ref(new Array<Getfeedbacks>());
-  const entity = ref(new Object() as Getfeedbacks);
-  const url = '/feedback/';
+  const filteredEntities = ref(new Array<GetRegistration>());
+  const entity = ref(new Object() as GetRegistration);
+  const url = '/registration/';
 
-  async function create(obj:CreateFeedback){
-    loading.value = true;
+  async function create(obj:CreateRegistration){
+    const {confirmPassword} = useUserStore();
+    if(!(await confirmPassword())) return false;
     const {$api} = useNuxtApp();
     return await $api.post(url, obj)
     .then((resp) => {
-      getAll();
+      toastSuccess(resp.data.message);
       return true
     })
-    .catch(() => false)
-    .finally(() => {
-      loading.value = false;
-    });
-  }
-
-  async function update(obj:UpdateFeedback, id:string|number){
-    const {$api} = useNuxtApp();
-    return await $api.put(url + id, obj)
-    .then((resp) => true)
     .catch(() => false)
   }
 
   async function compareOwner(){
     const {me} = useAuthStore();
     const user = await me();
-    if(user.id === entity.value?.author?.id) return true;
+    if(user.id === entity.value?.user?.id) return true;
     return false;
   }
   
-  async function getAll(){
+  async function getAllByFilters(filters:[]){
     loading.value = true;
     let succcess = false;
     const {$api} = useNuxtApp();
-    await $api.post(url + 'filter', [{
-      column:'event_id',
-      operator:'=',
-      value:Number(useRoute().params.id)
-    }])
+    await $api.post(url + 'filter', filters)
     .then((resp) => {
       entities.value = resp.data.data;
       qtt.value = resp.data.qtt;
@@ -58,19 +45,21 @@ export const useFeedbackStore = defineStore('feedback', () => {
     });
     return succcess
   }
-
-  async function getAllByFilter(filter:[]){
+  
+  async function getAllByToken(){
     loading.value = true;
+    let succcess = false;
     const {$api} = useNuxtApp();
-    return await $api.post('/feedback/filter', filter)
+    await $api.get(url + 'auth')
     .then((resp) => {
-      filteredEntities.value = resp.data.data;
-      return true
+      userRegistrations.value = resp.data.data;
+      qtt.value = resp.data.qtt;
+      succcess = true
     })
-    .catch(() => false)
     .finally(() => {
       loading.value = false;
     });
+    return succcess
   }
   
   async function deleteById(id:string|number){
@@ -101,13 +90,13 @@ export const useFeedbackStore = defineStore('feedback', () => {
     create,
     entities,
     entity,
-    getAll,
-    getAllByFilter,
+    getAllByFilters,
     filteredEntities,
     getById,
+    getAllByToken,
     compareOwner,
-    update,
     deleteById,
+    userRegistrations,
     qtt
   }
 

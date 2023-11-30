@@ -37,12 +37,18 @@ class RegistrationService
         $arr = $objDto->toArray();
 
         if(!Event::where('id', $arr['event_id'])->exists())
-            throw new Exception("Event not found", 404);
+            throw new Exception("Evento não encontrado", 404);
 
-        if(!Event::where('id', $arr['event_id'])
+        if(Event::where('id', $arr['event_id'])
             ->where('registration_validity', '<', now())->exists()
         )
-            throw new Exception("The registration deadline for the event has expired", 406);
+            throw new Exception("Parece que você extrapolou a data limite de inscrição.
+            Por este motivo não foi possível confirmar sua inscrição", 406);
+
+        if(Registration::where('event_id', $arr['event_id'])
+            ->where('user_id', auth()->id())->exists()
+        )
+            throw new Exception("Você já está inscrito neste evento.", 409);
 
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
@@ -110,6 +116,29 @@ class RegistrationService
         $registration->presence_date = now();
         $registration->save();
         return true;
+    }
+
+    public function getAllWithFilter(array $filters):Collection{
+        $query = Registration::query();
+
+        foreach ($filters as $filter){
+            $query->where($filter['column'],$filter['operator'],$filter['value']);
+        }
+
+        return RegistrationDTO::toDTOs($query->get());
+
+    }
+
+    public function getAllByAuthId(): Collection
+    {
+        $query = Registration::query();
+        $query->join('users', 'registrations.user_id', '=', 'users.id')
+        ->join('events', 'events.id', '=', 'registrations.event_id')
+        ->select('registrations.*')
+        ->where('users.id', auth()->id())
+        ->orderBy('events.event_date')
+        ->get();
+        return RegistrationDTO::toDTOs($query->get());
     }
 
 }
