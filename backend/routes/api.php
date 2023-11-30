@@ -89,17 +89,19 @@ Route::group([
 
 Route::group([
 
-    'prefix' => 'event',
-    'middleware' => 'auth:api'
+    'prefix' => 'event'
 
 ], function ($router) {
 
     Route::controller(EventController::class)->group(function (){
-        Route::post('', 'create');
-        Route::post('/filter', 'getAllWithFilter');
-        Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'delete');
-        Route::get('/{id}', 'getById');
+        Route::middleware('auth:api')->group(function (){
+            Route::post('', 'create');
+            Route::post('/filter', 'getAllWithFilter');
+            Route::put('/{id}', 'update');
+            Route::delete('/{id}', 'delete');
+            Route::get('/{id}', 'getById');
+
+        });
         Route::get('', 'getAll');
     });
 

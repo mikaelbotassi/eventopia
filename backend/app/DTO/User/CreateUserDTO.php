@@ -13,6 +13,8 @@ class CreateUserDTO extends DTO
     public string|null $birth;
     public array|null $categories = [];
 
+
+
     public function __construct()
     {
         parent::__construct([
@@ -32,7 +34,7 @@ class CreateUserDTO extends DTO
                 'required',
                 'string',
                 'min:10',
-                'unique:users',
+                'unique:users,email',
                 'max:191'
             ],
             'password' => [

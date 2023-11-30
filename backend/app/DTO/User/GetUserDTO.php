@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class GetUserDTO extends DTO
 {
+    public int|null $id;
     public string|null $name;
     public string|null $email;
     public string|null $birth;

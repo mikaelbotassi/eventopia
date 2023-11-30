@@ -42,3 +42,15 @@ div:where(.swal2-container) div:where(.swal2-popup){
     background:var(--dark) !important;
     color:#fff !important;
 }
+
+::-webkit-scrollbar { 
+    padding: 1px;
+    background: transparent;
+    height: .5rem;
+    width: .5rem }
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb { padding: 3px }
+
+::-webkit-scrollbar-thumb { background: var(--secondary) }
+::-webkit-scrollbar-thumb:hover { background: var(--secondary)  }

@@ -2,6 +2,8 @@
 
 namespace App\DTO\User;
 use App\DTO\DTO;
+use App\Models\User;
+use App\Utils\Functions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
 
@@ -40,6 +42,13 @@ class UpdateUserDTO extends DTO
                 'nullable',
                 'string',
                 'max:20'
+            ],
+            'categories' => [
+                'nullable',
+                'array'
+            ],
+            'categories.*.id' => [
+                'exists:categories,id'
             ]
         ]);
     }

@@ -68,6 +68,20 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true;
     entity.value = await me().finally(() => loading.value = false);
   }
+  
+  async function getById(id:string|number){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.get(url + id)
+    .then((resp) => {
+      entity.value = resp.data.data;
+      return true
+    })
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
+  }
 
   async function compareOwner(){
     loading.value = true;
@@ -100,6 +114,7 @@ export const useUserStore = defineStore('user', () => {
     registerUser,
     user,
     getByToken,
+    getById,
     entity,
     compareOwner,
     deleteByToken,

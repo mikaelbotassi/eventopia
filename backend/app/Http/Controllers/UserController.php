@@ -31,6 +31,9 @@ class UserController extends Controller
         return response()->json(['data' => $obj])->setStatusCode(200);
     }
 
+    /**
+     * @throws Exception
+     */
     public function update(Request $request):JsonResponse
     {
         if($this->userService->update(UpdateUserDTO::makeFromRequest($request)))
@@ -38,6 +41,9 @@ class UserController extends Controller
         return response()->json(['message' => 'Não foi possível salvar os dados, tente novamente.'])->setStatusCode(200);
     }
 
+    /**
+     * @throws Exception
+     */
     public function create(Request $request):JsonResponse
     {
         if($this->userService->create(CreateUserDTO::makeFromRequest($request)))

@@ -22,7 +22,12 @@
                 </el-dropdown>
             </div>
             <div class="p-4 pt-2 event-card-body relative rounded-4" style="z-index:1">
-                <h1 class="font-bold text-3xl mb-10">{{ entity.title }}</h1>
+                <h1 class="font-bold text-3xl mb-3">{{ entity.title }}</h1>
+                <div class="flex items-center gap-3 mb-10">
+                    <span class="border border-secondary text-secondary text-xs p-2 rounded" v-for="category in entity?.categories" :key="category.id">
+                        {{ category.name }}
+                    </span>
+                </div>
                 <div class="flex items-center justify-start gap-2 mb-2 text-opacity-75">
                     <span class="fill-white bg-white/25 px-2 py-1 rounded-lg">
                         <icons-pin/>
@@ -33,7 +38,7 @@
                     <span class="bg-white/25 fill-white px-2 py-1 rounded-lg">
                         <icons-schedule/>
                     </span>
-                    {{ entity.event_date }}
+                    {{ formater?.dateTimeFormat(entity.event_date) }}
                 </div>
                 <p class="font-bold mb-0">Sobre</p>
                 <p class="mb-3">{{ entity.description }}</p>
@@ -52,6 +57,10 @@
         layout:'side-nav',
         middleware:'auth'
     })
+
+    import Utils from '~/models/formaters/Utils';
+    const formater = new Utils();
+
     const isOwner = ref(false);
     const route = useRoute();
     const router = useRouter();
@@ -82,13 +91,23 @@
         });
     }
 
+    const asyncExecuted = ref(false);
+
     useAsyncData(
         'owner',
         async () => {
+            asyncExecuted.value = true;
             await getById(Number(route.params.id));
             await compareOwner().then((resp) => isOwner.value = resp)
         }
     );
+
+    onMounted(async () => {
+        if(asyncExecuted.value) return true;
+        await getById(Number(route.params.id));
+        await compareOwner().then((resp) => isOwner.value = resp)
+    })
+
 </script>
 <style scoped>
 .event-card-body::after{

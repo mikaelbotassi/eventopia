@@ -1,4 +1,5 @@
 import GetCategories from '../category/GetCategories';
+
 export class CreateUser{
     name: string;
     cpf_cnpj: string;

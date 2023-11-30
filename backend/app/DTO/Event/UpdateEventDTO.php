@@ -11,6 +11,7 @@ class UpdateEventDTO extends DTO
     public string|null $localization;
     public string|null $urlLocalization;
     public string|null $description;
+    public array|null $categories = [];
     public int|null $workload;
     public string|null $registration_validity;
     public function __construct()
@@ -49,6 +50,13 @@ class UpdateEventDTO extends DTO
                 'nullable',
                 'exists:users,id',
             ],
+            'categories' => [
+                'nullable',
+                'array'
+            ],
+            'categories.*.id' => [
+                'exists:categories,id'
+            ]
         ]);
     }
 
