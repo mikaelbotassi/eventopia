@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         // name, cpf_cnpj, birth, email, password
         $bruteArr = [
-            ['root', '736.224.200-06', '2001-11-08', 'root@gmail.com', '$2y$12$xaW5sc2WMcjy.0shNG0/L.1yHe.r.vHY7IrabNMjSbASQQR46NqSG']
+            ['root', '73622420006', '2001-11-08', 'root@gmail.com', '$2y$12$xaW5sc2WMcjy.0shNG0/L.1yHe.r.vHY7IrabNMjSbASQQR46NqSG']
         ];
 
         $arrInsert = [];

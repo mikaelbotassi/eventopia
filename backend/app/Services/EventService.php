@@ -4,14 +4,31 @@ namespace App\Services;
 
 use App\DTO\Event\EventDTO;
 use App\DTO\DTO;
+use App\Models\Category;
 use App\Models\Event;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class EventService
 {
     public function getAll(DTO $dtoClass,Collection $filters = new Collection()):Collection{
         $query = Event::query();
+        $userId =auth()->id();
+        if(auth()->check()){
+            $query->leftJoin('event_categories', 'events.id', '=', 'event_categories.event_id')
+            ->leftJoin('user_categories', function ($join) use ($userId) {
+                $join->on('event_categories.category_id', '=', 'user_categories.category_id')
+                    ->where('user_categories.user_id', '=', $userId)
+                    ->orWhereNull('user_categories.user_id');
+            })
+            ->select('events.*')
+            ->selectRaw('COUNT(user_categories.category_id) as categories_in_common')
+            ->whereNull('events.deleted_at')
+            ->groupBy('events.id')
+            ->orderByDesc('categories_in_common')
+            ->orderBy('events.id');
+        }
 
         foreach ($filters as $column => $value){
             $query->where($column, $value);
@@ -37,12 +54,29 @@ class EventService
     }
 
     public function create(DTO $eventDto):bool{
+
         $obj = new Event();
         $arr = $eventDto->toArray();
+
+        $categories = null;
+        if(isset($arr['categories'])) {
+            $categories = $arr['categories'];
+            unset($arr['categories']);
+        }
+
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
         $obj->owner = auth()->id();
-        return $obj->save();
+
+        if(!$obj->save()) return false;
+
+        if($categories){
+            foreach ($categories as $arrObj){
+                $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -55,9 +89,24 @@ class EventService
         if($obj->owner != auth()->id())
             throw new Exception("You do not have privileges to perform this action", 403);
 
+        $categories = null;
+        if(isset($arr['categories'])) {
+            $categories = $arr['categories'];
+            unset($arr['categories']);
+        }
+
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
-        return $obj->save();
+
+        $obj->save();
+
+        if($categories){
+            $obj->categories()->detach();
+            foreach ($categories as $arrObj){
+                $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
+            }
+        }
+        return true;
     }
 
     /**

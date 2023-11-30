@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root{
- --dark:#212529;
- --secondary:#10d38d;
- --primary:#1f2937;
+    --dark:#212529;
+    --rgb-dark:34,38,42;
+    --secondary:#10d38d;
+    --rgb-secondary:15,214,141;
+    --primary:#1f2937;
+    --rgb-primary:31,41,55;
 }
 
 .el-dropdown-menu{
@@ -17,3 +20,74 @@
 .el-dropdown-menu__item:not(.is-disabled):focus {
     background-color: #181b1e !important;
 }
+
+.el-checkbox-button__inner{
+    --my-opacity:.75;
+    background-color:rgba(var(--rgb-dark),.50) !important;
+    color:var(--secondary) !important;
+    border-color:var(--secondary) !important;
+}
+
+.el-checkbox-button__inner:hover{
+    background-color:rgba(var(--rgb-secondary),.05) !important;
+    color:var(--secondary) !important;
+}
+
+input.el-checkbox-button__original:checked + .el-checkbox-button__inner{
+    background-color:var(--secondary) !important;
+    color:var(--dark) !important;
+}
+
+div:where(.swal2-container) div:where(.swal2-popup){
+    background:var(--dark) !important;
+    color:#fff !important;
+}
+
+::-webkit-scrollbar { 
+    padding: 1px;
+    background: transparent;
+    height: .5rem;
+    width: .5rem }
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb { padding: 3px }
+
+::-webkit-scrollbar-thumb { background: var(--secondary) }
+::-webkit-scrollbar-thumb:hover { background: var(--secondary)  }
+
+.el-tabs--border-card {
+    background: var(--dark) !important;
+    border: none !important;
+}
+
+.el-tabs--border-card>.el-tabs__header {
+    background-color: var(--dark) !important;
+    border-bottom: var(--secondary) !important;
+    margin: 0;
+}
+
+.el-tabs__item{
+    background-color: var(--dark) !important;
+    border: none !important;
+    color: var(--secondary) !important;
+}
+.el-tabs__item:hover{
+    background-color: rgba(var(--rgb-secondary),.1) !important;
+    color: var(--secondary) !important;
+}
+
+.el-tabs__item.is-active{
+    background-color: var(--secondary) !important;
+    border: none !important;
+    color: var(--dark) !important;
+}
+
+.el-tag{
+    background-color:var(--dark) !important;
+    color:var(--secondary) !important;
+    border-color:var(--secondary) !important;
+}
+
+.rounded-circle{ border-radius:100% }
+
+.el-loading-mask{ background-color: rgba(var(--rgb-dark), .5) !important }

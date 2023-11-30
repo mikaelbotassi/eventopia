@@ -9,23 +9,23 @@
         <div class="flex flex-wrap">
 
           <el-form-item class="w-full p-3" label="Título do evento">
-            <el-input v-model="obj.title" size="large" placeholder="Insira o título do evento" type="text"/>
+            <el-input v-model="obj.title" size="large" placeholder="Insira o título do evento" type="text" name="title"/>
           </el-form-item>
 
           <el-form-item class="w-full lg:w-1/2 p-3" label="Local do evento">
-            <el-input v-model="obj.localization" size="large" placeholder="Insira a localização do evento" type="text"/>
+            <el-input v-model="obj.localization" size="large" placeholder="Insira a localização do evento" name="localization" type="text"/>
           </el-form-item>
 
           <el-form-item class="w-full lg:w-1/2 p-3" label="Link do maps para o local do evento">
-            <el-input v-model="obj.urlLocalization" size="large" placeholder="Insira o link do maps com o local" type="text"/>
+            <el-input v-model="obj.urlLocalization" size="large" placeholder="Insira o link do maps com o local" name="urlLocalization" type="text"/>
           </el-form-item>
 
           <el-form-item class="w-full p-3" label="Descrição do evento">
-            <el-input :autosize="{ minRows: 4 }" v-model="obj.description" size="large" placeholder="Insira a descrição do evento" type="textarea"/>
+            <el-input :autosize="{ minRows: 4 }" name="description" v-model="obj.description" size="large" placeholder="Insira a descrição do evento" type="textarea"/>
           </el-form-item>
 
           <el-form-item class="w-full md:w-1/3 p-3" label="Carga Horária">
-            <el-input-number :autosize="{ minRows: 4 }" v-model="obj.workload" class="w-full" size="large" placeholder="Insira a carga horária do evento" type="textarea"/>
+            <el-input-number :autosize="{ minRows: 4 }" name="worload" v-model="obj.workload" class="w-full" size="large" placeholder="Insira a carga horária do evento" type="textarea"/>
           </el-form-item>
 
           <el-form-item class="w-full md:w-1/3 p-3" label="Dia do evento">
@@ -33,6 +33,7 @@
               v-model="obj.event_date"
               class="w-full"
               size="large"
+              name="event_date"
               type="datetime"
               placeholder="dd/mm/YYYY HH:mm"
               format="DD/MM/YYYY HH:mm"
@@ -42,11 +43,12 @@
             />
           </el-form-item>
 
-          <el-form-item class="w-full lg:w-1/3 p-3" label="Data máxima para inscrição">
+          <el-form-item class="w-full md:w-1/3 p-3" label="Data máxima para inscrição">
             <el-date-picker
               v-model="obj.registration_validity"
               class="w-full"
               size="large"
+              name="registratino_valiity"
               type="datetime"
               placeholder="dd/mm/YYYY HH:mm"
               format="DD/MM/YYYY HH:mm"
@@ -55,7 +57,18 @@
               time-format="HH:mm"
             />
           </el-form-item>
-
+          <div class="col-span-2 my-5">
+              <h2 class="font-bold text-2xl text-white">Categorias</h2>
+              <h3 class="text-sm text-white/50 mb-5">Selecione as categorias que o evento se encaixa.</h3>
+              <el-checkbox-group v-if="!loadingCategories" v-model="categories" size="large">
+                  <el-checkbox-button v-for="category in entities" :key="category.id" :label="category.id">
+                      {{ category.name }}
+                  </el-checkbox-button>
+              </el-checkbox-group>
+              <div class="flex items-center justify-center p-5" v-else>
+                  <LoadersCubeLoader />
+              </div>
+          </div>
         </div>
       </modal-body>
       <modal-footer>
@@ -69,6 +82,7 @@
 <script lang="ts" setup>
 
   import { CreateEvent, UpdateEvent } from '~/models/event/Event';
+  import GetCategories from '~/models/category/GetCategories';
   import { cast } from '~/utils/index.ts'
 
   const props = defineProps({
@@ -81,13 +95,36 @@
 
   const { create, update, getById } = useEventStore();
   const {loading,entity} = storeToRefs(useEventStore());
+
+  const { getAll } = useCategoryStore();
+  const { loading:loadingCategories, entities } = storeToRefs(useCategoryStore());
+
   const emit = defineEmits(['save','close']);
 
+  const categories = ref([]);
+
   const obj = props.entityId <= 0 ? reactive(new CreateEvent()) : reactive(cast(new UpdateEvent(), entity.value));
+  
+  obj.categories?.forEach((val) => categories.value.push(val.id))
 
   const closeModal = () => emit('close')
 
+  const castToCategories = () => {
+    obj.categories = [];
+    if(!categories.value) return false;
+    categories.value.forEach((val) => {
+        const newCategory = new GetCategories;
+        newCategory.id = val;
+        obj.categories.push(newCategory)
+    });
+  }
+
+  onMounted(() => {
+    getAll();
+  })
+  
   function formSave(){
+    castToCategories();
     (async function() {
       if(props.entityId > 0){
         if(await update(obj, props.entityId)) emit('save')

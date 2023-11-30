@@ -43,4 +43,8 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'registrations');
     }
 
+    public function categories():BelongsToMany{
+        return $this->belongsToMany(Category::class, 'event_categories');
+    }
+
 }

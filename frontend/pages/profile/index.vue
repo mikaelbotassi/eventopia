@@ -8,8 +8,8 @@
                 <div class="flex flex-col justify-center">
                     <h1 class="text-3xl font-bold uppercase mb-3">{{ entity?.name }}</h1>
                     <h2 class="mb-0">{{ entity?.email }}</h2>
-                    <h3 class="mb-0">{{ entity?.cpf_cnpj }}</h3>
-                    <h3 class="mb-5">{{ entity?.birth }}</h3>
+                    <h3 class="mb-0">{{ formater?.getMaskedDoc(entity?.cpf_cnpj) }}</h3>
+                    <h3 class="mb-5">{{ formater?.dateFormat(entity?.birth) }}</h3>
                     <el-dropdown trigger="click">
                         <button class="el-dropdown-link bg-dark border-2 text-white border-white px-3 py-2 rounded-full">
                             Configurações
@@ -29,7 +29,7 @@
                     </el-dropdown>
                 </div>
             </header>
-            <users-tabs-user v-if="entity.id" :userId="entity.id" />
+            <users-tabs-user v-if="entity.id" :showSubscriptions="true" :userId="entity.id" />
         </article>
     </template>
     <div class="flex items-center justify-center p-5" v-else>
@@ -43,8 +43,12 @@
         layout:'side-nav',
         middleware:'auth'
     })
-    const isOwner = ref(false);
+
+    import Utils from '~/models/formaters/Utils';
+
     const router = useRouter();
+
+    const formater = new Utils();
 
     const {$swal} = useNuxtApp();
 
@@ -72,12 +76,18 @@
         });
     }
 
-    isOwner.value = await useAsyncData(
+    const asyncExecuted = ref(false);
+
+    useAsyncData(
         'owner',
-        async () => await compareOwner()
+        async () => {
+            asyncExecuted.value = true;
+            await getByToken();
+        }
     );
 
     onMounted(() => {
+        if(asyncExecuted.value) return true;
         getByToken();
     });
     

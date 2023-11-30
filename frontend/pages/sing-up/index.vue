@@ -7,23 +7,36 @@
                 </div>
                 <p class="text-white text-3xl mb-5">Insira seus dados abaixo.</p>
                 <div class="grid w-full grid-cols-2 gap-4 mb-5">
-                    <el-input v-model="user.name" class="col-span-2" size="large" placeholder="Insira seu nome completo" type="text" name="fullname"/>
-                    <el-input v-model="user.cpf_cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" size="large" placeholder="Insira seu CPF ou CNPJ" type="text"/>
-                    <el-input v-model="user.email" size="large" placeholder="Insira seu E-mail" type="email" name="email"/>
-                    <el-input v-model="user.password" size="large" placeholder="Insira sua senha" type="password" name="password" show-password/>
+                    <el-input v-model="user.name" class="col-span-2 w-full" size="large" placeholder="Insira seu nome completo" type="text" name="fullname"/>
+                    <el-input v-model="user.cpf_cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" size="large" class="w-full" placeholder="Insira seu CPF ou CNPJ" type="text"/>
+                    <el-input v-model="user.email" size="large" placeholder="Insira seu E-mail" type="email" class="w-full" name="email"/>
+                    <el-input v-model="user.password" size="large" placeholder="Insira sua senha" type="password" name="password" class="w-full" show-password/>
                     <el-date-picker
                         v-model="user.birth"
                         type="date"
+                        class="w-full"
                         format="DD/MM/YYYY"
                         value-format="YYYY-MM-DD"
                         placeholder="Data de aniversário"
                         size="large"
                     />
+                    <div class="col-span-2 my-5">
+                        <h2 class="font-bold text-2xl text-white">Categorias</h2>
+                        <h3 class="text-sm text-white/50 mb-5">Selecione as categorias de eventos que você tem preferência.</h3>
+                        <el-checkbox-group v-if="!loading" v-model="categories" size="large">
+                            <el-checkbox-button v-for="entity in entities" :key="entity.id" :label="entity.id">
+                                {{ entity.name }}
+                            </el-checkbox-button>
+                        </el-checkbox-group>
+                        <div class="flex items-center justify-center p-5" v-else>
+                            <LoadersCubeLoader />
+                        </div>
+                    </div>
                 </div>
                 <div class="flex items-center justify-between mb-5">
-                    <el-link class="text-white fill-white after:border-white" href="/login">
+                    <NuxtLink class="text-white fill-white after:border-white" :to="'/login'">
                         Voltar
-                    </el-link>
+                    </NuxtLink>
                     <el-button size="large" :loading="loading" color="#10d38d" @click="doSingUp()" dark plain>Enviar</el-button>
                 </div>
             </div>
@@ -32,20 +45,35 @@
 </template>
 <script setup lang="ts">
     import { CreateUser } from '~/models/user/User';
+    import GetCategories from '~/models/category/GetCategories';
     definePageMeta({
         layout:'default',
     })
     
+    const { getAll } = useCategoryStore();
+    const { loading, entities } = storeToRefs(useCategoryStore());
     const { registerUser } = useUserStore();
-    const { loading } = storeToRefs(useUserStore());
 
     const user = reactive(new CreateUser());
+    const categories = ref();
 
     const doSingUp = () => {
+        castToCategories();
         (async function() {
             if(await registerUser(user)) useRouter().push('/login');
         })();
     };
+
+    const castToCategories = () => {
+        user.categories = [];
+        categories.value.forEach((val) => {
+            const newCategory = new GetCategories;
+            newCategory.id = val;
+            user.categories.push(newCategory)
+        });
+    }
+
+    onMounted(getAll)
 
 </script>
 <style scoped>

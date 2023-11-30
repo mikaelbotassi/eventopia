@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Utils\Database\EloquentFindable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int id
- * @property int user_id
- * @property int event_id
- * @property User user
- * @property Event event
+ * @property int registration_id
+ * @property Registration registration
  * @property int code
  * @method static where(string $string, int|string|null $id)
  */
@@ -27,12 +24,8 @@ class Certificate extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function user():BelongsTo{
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    public function event():BelongsTo{
-        return $this->belongsTo(Event::class, 'event_id', 'id');
+    public function registration():BelongsTo{
+        return $this->belongsTo(Registration::class, 'registration_id', 'id');
     }
 
 }

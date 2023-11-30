@@ -11,6 +11,7 @@ class CreateEventDTO extends DTO
     public string|null $localization;
     public string|null $urlLocalization;
     public string|null $description;
+    public array|null $categories = [];
     public int|null $workload;
     public string|null $registration_validity;
     public function __construct()
@@ -46,6 +47,13 @@ class CreateEventDTO extends DTO
                 'required',
                 'after:yesterday',
             ],
+            'categories' => [
+                'nullable',
+                'array'
+            ],
+            'categories.*.id' => [
+                'exists:categories,id'
+            ]
         ]);
     }
 

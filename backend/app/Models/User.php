@@ -80,8 +80,4 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Feedback::class, 'user_id', 'id');
     }
 
-    public function certificates():HasMany{
-        return $this->hasMany(Certificate::class, 'user_id', 'id');
-    }
-
 }

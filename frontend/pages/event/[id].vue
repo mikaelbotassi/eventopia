@@ -21,23 +21,39 @@
                     </template>
                 </el-dropdown>
             </div>
-            <div class="p-4 pt-2 event-card-body relative rounded-4" style="z-index:1">
+            <div class="p-4 pt-2 text-center event-card-body relative rounded-4" style="z-index:1">
                 <h1 class="font-bold text-3xl mb-10">{{ entity.title }}</h1>
-                <div class="flex items-center justify-start gap-2 mb-2 text-opacity-75">
-                    <span class="fill-white bg-white/25 px-2 py-1 rounded-lg">
-                        <icons-pin/>
-                    </span>
-                    {{ entity.localization }}
+                <div class="flex justify-center items-center gap-3 mb-10">
+                    <el-tag v-for="category in entity?.categories" :key="category.id">
+                        {{ category.name }}
+                    </el-tag>
                 </div>
-                <div class="flex items-center justify-start gap-2 mb-10">
-                    <span class="bg-white/25 fill-white px-2 py-1 rounded-lg">
-                        <icons-schedule/>
-                    </span>
-                    {{ entity.event_date }}
+                <div class="flex items-center justify-center flex-wrap gap-5 mb-10">
+                    <div class="flex flex-col items-center relative rounded-xl p-3 w-[150px] h-[150px] bg-secondary/50  justify-center fill-white leading-none gap-1 mb-3">
+                        <icons-pin class="mb-5 text-xl"/>
+                        <small class="text-white">Localização</small>
+                        {{ entity.localization }}
+                        <a href="{{ entity.urlLocalization }}" target="_blank" class="absolute inset-0"></a>
+                    </div>
+                    <div class="flex flex-col items-center relative rounded-xl p-3 w-[150px] h-[150px] bg-primary/50 justify-center fill-white leading-none gap-2 mb-2">
+                        <icons-schedule class="mb-5 text-xl"/>
+                        <small>Data e Hora</small>
+                        {{ formater?.dateTimeFormat(entity.event_date) }}
+                    </div>
+                    <div class="flex flex-col col-span-2 md:col-span-1 items-center relative rounded-xl p-3 w-[150px] h-[150px] bg-red-500 leading-none justify-center fill-white gap-2 mb-2">
+                        <icons-calendar-xmark class="mb-5 text-xl"/>
+                        <small>Inscrições até</small>
+                        {{ formater?.dateTimeFormat(entity.registration_validity) }}
+                    </div>
                 </div>
-                <p class="font-bold mb-0">Sobre</p>
-                <p class="mb-3">{{ entity.description }}</p>
-                <h2 class="font-bold mt-10 text-2xl">Comentários</h2>
+                <h2 class="font-bold text-2xl mb-0">Sobre</h2>
+                <p class="mb-10">{{ entity.description }}</p>
+                <el-button size="large" color="#10d38d" class="hover:bg-secondary">
+                    <icons-ticket class="me-3"/>
+                    Quero me inscrever
+                </el-button>
+                <h2 class="font-bold mt-10 text-2xl mb-5">Comentários({{ `${qtt}` }})</h2>
+                <feedbacks-comments-panel/>
             </div>
         </article>
     </div>
@@ -52,6 +68,10 @@
         layout:'side-nav',
         middleware:'auth'
     })
+
+    import Utils from '~/models/formaters/Utils';
+    const formater = new Utils();
+
     const isOwner = ref(false);
     const route = useRoute();
     const router = useRouter();
@@ -65,6 +85,9 @@
     const eventStore = useEventStore();
 
     const {getById, compareOwner, deleteById} = eventStore;
+
+    const {getAll} = useFeedbackStore();
+    const {qtt} = storeToRefs(useFeedbackStore());
 
     const {entity, loading} = storeToRefs(eventStore);
 
@@ -82,13 +105,25 @@
         });
     }
 
+    const asyncExecuted = ref(false);
+
     useAsyncData(
         'owner',
         async () => {
+            asyncExecuted.value = true;
             await getById(Number(route.params.id));
-            await compareOwner().then((resp) => isOwner.value = resp)
+            await compareOwner().then((resp) => isOwner.value = resp);
+            await getAll();
         }
     );
+
+    onMounted(async () => {
+        if(asyncExecuted.value) return true;
+        await getById(Number(route.params.id));
+        await compareOwner().then((resp) => isOwner.value = resp);
+        await getAll();
+    })
+
 </script>
 <style scoped>
 .event-card-body::after{

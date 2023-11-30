@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int event_id
  * @property User user
  * @property Event event
- * @property bool is_present
+ * @property string presence_date
  * @method static where(string $string, int|string|null $id)
  */
 
