@@ -1,9 +1,9 @@
 <template>
-    <div class="p-5 border border-white" v-if="!loading">
+    <div class="p-5 border border-white" v-loading="loadingAction" v-if="!loading">
       <el-table :data="userRegistrations" dark>
         <el-table-column label="Título do evento">
           <template #default="props">
-            <NuxtLink class="underline underline-offset-2" :to="'/event/' + props.row.event?.id">{{ props.row.event?.title }}</NuxtLink>
+            <NuxtLink class="underline underline-offset-2 text-secondary" :to="'/event/' + props.row.event?.id">{{ props.row.event?.title }}</NuxtLink>
           </template>
         </el-table-column>
         <el-table-column label="Data do evento">
@@ -19,7 +19,7 @@
             <el-tag class="no-style" type="danger" effect="dark" v-else>Não confirmado</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="Ações" width="75px">
+        <el-table-column label="Ações" width="75">
           <template #default="props">
             <el-dropdown trigger="click" class="w-full">
               <div class="el-dropdown-link w-full flex flex-col items-center justify-center">
@@ -28,7 +28,7 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item :icon="ElIconPrinter">Baixar QrCode</el-dropdown-item>
-                  <el-dropdown-item :icon="ElIconClose">Cancelar Inscrição</el-dropdown-item>
+                  <el-dropdown-item @click="cancelRegistration(props.row.id)" :icon="ElIconClose">Cancelar Inscrição</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -43,13 +43,19 @@
 
 <script lang="ts" setup>
 
-  const {getAllByToken} = useRegistrationStore();
+  const {getAllByToken, deleteById} = useRegistrationStore();
   const {userRegistrations, loading} = storeToRefs(useRegistrationStore());
 
   const isAsync = ref(false)
+  const loadingAction = ref(false)
 
   import Utils from '~/models/formaters/Utils';
   const formater = new Utils();
+
+  function cancelRegistration(id:any){
+    loadingAction.value = true;
+    deleteById(id).finally(() => loadingAction.value = false)
+  } 
 
   useAsyncData(
   'userRgistrations',

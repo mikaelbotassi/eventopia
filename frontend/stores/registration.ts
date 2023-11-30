@@ -63,12 +63,16 @@ export const useRegistrationStore = defineStore('registration', () => {
   }
   
   async function deleteById(id:string|number){
+    loading.value = true;
     const {$api} = useNuxtApp();
     return await $api.delete(url + id)
     .then((resp) => {
+      toastSuccess(resp.data.message);
+      getAllByToken();
       return true
     })
     .catch(() => false)
+    .finally(() => loading.value = false)
   }
 
   async function getById(id:string|number){
