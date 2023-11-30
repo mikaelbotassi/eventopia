@@ -14,8 +14,7 @@ class UpdateCertificateDTO extends DTO
             'code' => [
                 'integer',
                 'gt:0',
-                'required',
-                'unique:certificates',
+                'required'
             ]
         ]);
     }

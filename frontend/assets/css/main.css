@@ -54,3 +54,40 @@ div:where(.swal2-container) div:where(.swal2-popup){
 
 ::-webkit-scrollbar-thumb { background: var(--secondary) }
 ::-webkit-scrollbar-thumb:hover { background: var(--secondary)  }
+
+.el-tabs--border-card {
+    background: var(--dark) !important;
+    border: none !important;
+}
+
+.el-tabs--border-card>.el-tabs__header {
+    background-color: var(--dark) !important;
+    border-bottom: var(--secondary) !important;
+    margin: 0;
+}
+
+.el-tabs__item{
+    background-color: var(--dark) !important;
+    border: none !important;
+    color: var(--secondary) !important;
+}
+.el-tabs__item:hover{
+    background-color: rgba(var(--rgb-secondary),.1) !important;
+    color: var(--secondary) !important;
+}
+
+.el-tabs__item.is-active{
+    background-color: var(--secondary) !important;
+    border: none !important;
+    color: var(--dark) !important;
+}
+
+.el-tag{
+    background-color:var(--dark) !important;
+    color:var(--secondary) !important;
+    border-color:var(--secondary) !important;
+}
+
+.rounded-circle{ border-radius:100% }
+
+.el-loading-mask{ background-color: rgba(var(--rgb-dark), .5) !important }

@@ -71,17 +71,18 @@ class RegistrationService
     /**
      * @throws Exception
      */
-    public function getQrCodeByEvent(int $event_id):string
+    public function getQrCodeByEvent(int $registration_id):string
     {
-        if(!Event::where('id',$event_id)->exists())
-            throw new Exception("Event not found", 404);
+        if(!Registration::where('id',$registration_id)->exists())
+            throw new Exception("Inscrição não encontrada", 404);
 
-        if(!Event::where('id',$event_id)->where('owner', auth()->id())->exists())
-            throw new Exception("You have no control over the requested event", 405);
+        $registration = Registration::findByOrFail($registration_id);
 
         $data = [
-            'event_id' => $event_id,
-            'validity' => Carbon::now()->addHours(24)->toDateTimeString(),
+            'registration_id' => $registration->id,
+            'user_name' => $registration->user->name,
+            'event_title' => $registration->event->title,
+//            'validity' => Carbon::now()->addHours(24)->toDateTimeString(),
             'created_at' => now()
         ];
 
@@ -97,15 +98,18 @@ class RegistrationService
     public function confirmPresence(string $qrCode):bool
     {
         $obj = json_decode(Crypt::decryptString($qrCode));
-        if(now() > $obj->validity)
-            throw new Exception("Unable to complete your action because the QrCode has expired", 406);
 
-        if($registration = Registration::where('user_id', auth()->id())->where('event_id', $obj->event_id)->first()){
-            $registration->is_present = true;
-            $registration->save();
-            return true;
-        }
-        return false;
+        $registration = Registration::findByOrFail($obj->registration_id);
+
+        if($registration->event->owner != auth()->id())
+            throw new Exception("Você não possui autorização para realizar esta operação", 403);
+
+        if($registration->event->event_date > now())
+            throw new Exception("Não é possível definir presença antes do evento.", 403);
+
+        $registration->presence_date = now();
+        $registration->save();
+        return true;
     }
 
 }

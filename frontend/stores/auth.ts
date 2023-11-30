@@ -54,10 +54,11 @@ export const useAuthStore = defineStore('auth', () => {
       const token = useCookie('token');
       token.value = resp.data;
       isAuth.value = true;
+      return true;
     })
     .catch((err) => {
       toastError('Sua sessão expirou, faça login novamente para utilizar nossos serviços.');
-      useRouter().push('/logout');
+      return false;
     });
   }
 

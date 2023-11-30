@@ -29,7 +29,7 @@
                     </el-dropdown>
                 </div>
             </header>
-            <users-tabs-user v-if="entity.id" :userId="entity.id" />
+            <users-tabs-user v-if="entity.id" :showSubscriptions="true" :userId="entity.id" />
         </article>
     </template>
     <div class="flex items-center justify-center p-5" v-else>

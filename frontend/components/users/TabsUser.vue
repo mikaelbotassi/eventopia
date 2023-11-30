@@ -12,10 +12,7 @@
                     :description="entity.localization"
                     />
                 </div>
-                <div class="bg-dark border p-3 rounded-lg border-secondary text-secondary" :closable="false" v-else >
-                    <h2 class="text-2xl font-bold">Ops...</h2>
-                    <p>Nenhum evento cadastrado até o momento</p>
-                </div>
+                <shared-empty-records v-else/>
             </el-tab-pane>
             <el-tab-pane label="Minhas Inscrições" v-if="showSubscriptions"></el-tab-pane>
         </el-tabs>

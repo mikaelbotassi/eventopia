@@ -20,6 +20,17 @@ class FeedbackService
 
     }
 
+    public function getAllWithFilter(array $filters):Collection{
+        $query = Feedback::query();
+
+        foreach ($filters as $filter){
+            $query->where($filter['column'],$filter['operator'],$filter['value']);
+        }
+
+        return FeedbackDTO::toDTOs($query->get());
+
+    }
+
     public function findById(int $id):DTO{
         return FeedbackDTO::toDTO(Feedback::findByOrFail($id));
     }

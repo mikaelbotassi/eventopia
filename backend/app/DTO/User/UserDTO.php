@@ -15,8 +15,6 @@ class UserDTO extends DTO
     public array|null $categories = [];
     public Collection|null $feedbacks = null;
 
-    public Collection|null $certificates = null;
-
     public function __construct()
     {
         parent::__construct([]);

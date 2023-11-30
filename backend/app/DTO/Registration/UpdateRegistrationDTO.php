@@ -2,7 +2,6 @@
 
 namespace App\DTO\Registration;
 use App\DTO\DTO;
-use App\Models\Category;
 
 class UpdateRegistrationDTO extends DTO
 {
