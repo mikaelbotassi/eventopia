@@ -48,9 +48,16 @@
                 </div>
                 <h2 class="font-bold text-2xl mb-0">Sobre</h2>
                 <p class="mb-10">{{ entity.description }}</p>
-                <registrations-button-register/>
-                <h2 class="font-bold mt-10 text-2xl mb-5">Comentários({{ `${qtt}` }})</h2>
-                <feedbacks-comments-panel/>
+                <registrations-button-register class="mb-10"/>
+                <el-tabs type="border-card">
+                    <el-tab-pane label="Comentários">
+                        <h2 class="font-bold text-2xl my-5">Comentários({{ `${qtt}` }})</h2>
+                        <feedbacks-comments-panel/>
+                    </el-tab-pane>
+                    <el-tab-pane label="Inscrições" v-if="isOwner">
+                        <registrations-registration-list :typeEvent="true"/>
+                    </el-tab-pane>
+                </el-tabs>
             </div>
         </article>
     </div>
@@ -134,4 +141,32 @@
   border-top-left-radius:1.5rem;
   border-top-right-radius:1.5rem;
 }
+
+.el-tabs--border-card {
+    background: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
+    border: none !important;
+}
+
+.el-tabs--border-card>.el-tabs__header {
+    background-color: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
+    border-bottom: #fff !important;
+    margin: 0;
+}
+
+.el-tabs__item{
+    background-color: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
+    border: none !important;
+    color: #fff !important;
+}
+.el-tabs__item:hover{
+    background-color: rgba(var(--rgb-secondary),.1) !important;
+    color: var(--secondary) !important;
+}
+
+.el-tabs__item.is-active{
+    background-color: var(--secondary) !important;
+    border: none !important;
+    color: var(--dark) !important;
+}
+
 </style>

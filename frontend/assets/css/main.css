@@ -94,7 +94,7 @@ div:where(.swal2-container) div:where(.swal2-popup){
 
 .el-table {
     --el-table-border-color: #fff !important;
-    --el-table-border: 1px solid #fff !important;
+    --el-table-border: 1px solid  !important;
     --el-table-text-color: #fff !important;
     --el-table-header-text-color: #fff !important;
     --el-table-row-hover-bg-color: transparent !important;

@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-    const {create} = useRegistrationStore();
+    const {create, getAllByFilters} = useRegistrationStore();
 
     const route = useRoute();
 
@@ -16,5 +16,7 @@
         loadingSubmit.value = true;
         create({event_id:Number(route.params.id)})
         .finally(() => loadingSubmit.value = false)
+        loadingSubmit.value = false;
     }
+    
 </script>

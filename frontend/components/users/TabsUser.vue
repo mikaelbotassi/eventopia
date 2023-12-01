@@ -15,7 +15,7 @@
                 <shared-empty-records v-else/>
             </el-tab-pane>
             <el-tab-pane label="Minhas Inscrições" v-if="showSubscriptions">
-                <registrations-registration-list/>
+                <registrations-registration-list :typeEvent="false"/>
             </el-tab-pane>
         </el-tabs>
     </template>

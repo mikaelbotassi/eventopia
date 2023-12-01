@@ -54,9 +54,12 @@ export default defineNuxtPlugin(async () => {
                         },1000)
                         break;
                     case 404:
-                        router.push('/')
-                    default:
-                    break;
+                        setTimeout(() => {
+                            router.replace({
+                                path: "/"
+                            });
+                        },1000)
+                        break;
                 }
                 return Promise.reject(error.response);
             }

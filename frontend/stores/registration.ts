@@ -12,11 +12,13 @@ export const useRegistrationStore = defineStore('registration', () => {
   const url = '/registration/';
 
   async function create(obj:CreateRegistration){
+    const {$api} = useNuxtApp();
     const {confirmPassword} = useUserStore();
     if(!(await confirmPassword())) return false;
-    const {$api} = useNuxtApp();
     return await $api.post(url, obj)
     .then((resp) => {
+      getAllEventRegistrationByUrl();
+      getAllByToken();
       toastSuccess(resp.data.message);
       return true
     })
@@ -46,6 +48,28 @@ export const useRegistrationStore = defineStore('registration', () => {
     return succcess
   }
   
+  async function getAllEventRegistrationByUrl(){
+    const route = useRoute();
+    if(route.name !== 'event-id') return false;
+    loading.value = true;
+    let succcess = false;
+    const {$api} = useNuxtApp();
+    await $api.post(url + 'filter', [{
+      column:'event_id',
+      operator:"=",
+      value:Number(route.params.id)
+    }])
+    .then((resp) => {
+      entities.value = resp.data.data;
+      qtt.value = resp.data.qtt;
+      succcess = true
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+    return succcess
+  }
+  
   async function getAllByToken(){
     loading.value = true;
     let succcess = false;
@@ -63,30 +87,19 @@ export const useRegistrationStore = defineStore('registration', () => {
   }
   
   async function deleteById(id:string|number){
+    const {confirmPassword} = useUserStore();
+    if(!(await confirmPassword())) return false;
     loading.value = true;
     const {$api} = useNuxtApp();
     return await $api.delete(url + id)
     .then((resp) => {
       toastSuccess(resp.data.message);
+      getAllEventRegistrationByUrl();
       getAllByToken();
       return true
     })
     .catch(() => false)
     .finally(() => loading.value = false)
-  }
-
-  async function getById(id:string|number){
-    loading.value = true;
-    const {$api} = useNuxtApp();
-    return await $api.get(url + id)
-    .then((resp) => {
-      entity.value = resp.data.data;
-      return true
-    })
-    .catch(() => false)
-    .finally(() => {
-      loading.value = false;
-    });
   }
 
   return {
@@ -96,11 +109,11 @@ export const useRegistrationStore = defineStore('registration', () => {
     entity,
     getAllByFilters,
     filteredEntities,
-    getById,
     getAllByToken,
     compareOwner,
     deleteById,
     userRegistrations,
+    getAllEventRegistrationByUrl,
     qtt
   }
 

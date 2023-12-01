@@ -1,16 +1,30 @@
 <template>
     <div class="p-5 border border-white" v-loading="loadingAction" v-if="!loading">
-      <el-table :data="userRegistrations" dark>
-        <el-table-column label="Título do evento">
-          <template #default="props">
-            <NuxtLink class="underline underline-offset-2 text-secondary" :to="'/event/' + props.row.event?.id">{{ props.row.event?.title }}</NuxtLink>
-          </template>
-        </el-table-column>
-        <el-table-column label="Data do evento">
-          <template #default="props">
-            {{ formater?.dateTimeFormat(props.row.event?.event_date) }}
-          </template>
-        </el-table-column>
+      <el-table :data="typeEvent ? entities : userRegistrations" dark>
+        <template v-if="typeEvent">
+          <el-table-column label="Nome do inscrito">
+            <template #default="props">
+              <NuxtLink class="underline underline-offset-2 text-secondary" :to="'/profile/' + props.row.user?.id">{{ props.row.user?.name }}</NuxtLink>
+            </template>
+          </el-table-column>
+          <el-table-column label="Data de nascimento">
+            <template #default="props">
+              {{ formater?.dateFormat(props.row.user?.birth) }}
+            </template>
+          </el-table-column>
+        </template>
+        <template v-else>
+          <el-table-column label="Título do evento">
+            <template #default="props">
+              <NuxtLink class="underline underline-offset-2 text-secondary" :to="'/event/' + props.row.event?.id">{{ props.row.event?.title }}</NuxtLink>
+            </template>
+          </el-table-column>
+          <el-table-column label="Data do evento">
+            <template #default="props">
+              {{ formater?.dateTimeFormat(props.row.event?.event_date) }}
+            </template>
+          </el-table-column>
+        </template>
         <el-table-column label="Presente">
           <template #default="props">
             <el-tag type="success" v-if="props.row?.presence_date">
@@ -43,11 +57,17 @@
 
 <script lang="ts" setup>
 
-  const {getAllByToken, deleteById} = useRegistrationStore();
-  const {userRegistrations, loading} = storeToRefs(useRegistrationStore());
+  const props = defineProps({
+      typeEvent: Boolean,
+  })
+
+  const {getAllByToken, getAllEventRegistrationByUrl, deleteById} = useRegistrationStore();
+  const {userRegistrations, loading, entities} = storeToRefs(useRegistrationStore());
 
   const isAsync = ref(false)
   const loadingAction = ref(false)
+
+  const route = useRoute();
 
   import Utils from '~/models/formaters/Utils';
   const formater = new Utils();
@@ -61,7 +81,8 @@
   'userRgistrations',
   async () => {
     isAsync.value = true;
-    await getAllByToken();
+    if(props.typeEvent) return await getAllEventRegistrationByUrl();
+    return await getAllByToken();
   });
 
   onMounted(async () => {
@@ -69,11 +90,8 @@
       isAsync.value = false;
       return true;
     }
-    await getAllByToken();
+    if(props.typeEvent) return await getAllEventRegistrationByUrl()
+    return await getAllByToken();
   })
 
 </script>
-
-<style>
-
-</style>
