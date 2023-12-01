@@ -31,6 +31,8 @@ class Registration extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $with = ['user', 'event'];
+
     public function user():BelongsTo{
         return $this->belongsTo(User::class, 'user_id', 'id');
     }

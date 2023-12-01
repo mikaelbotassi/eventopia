@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTO\DTO;
 use App\DTO\Event\EventDTO;
 use App\DTO\Registration\RegistrationDTO;
+use App\Models\Certificate;
 use App\Models\Event;
 use App\Models\Registration;
 use App\Models\User;
@@ -124,6 +125,12 @@ class RegistrationService
 
         $registration->presence_date = now();
         $registration->save();
+
+        $certificate = new Certificate();
+        $certificate->registration_id = $registration->id;
+        $timestamp = now()->timestamp;
+        $certificate->code = md5($timestamp.config('app.key'));
+        $certificate->save();
         return true;
     }
 

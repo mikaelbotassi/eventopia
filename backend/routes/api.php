@@ -141,6 +141,8 @@ Route::group([
         Route::post('', 'create');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
+        Route::post('/filter', 'getAllWithFilter');
+        Route::get('/auth', 'getAllByAuthId');
         Route::get('/{id}', 'getById');
         Route::get('', 'getAll');
     });

@@ -44,6 +44,12 @@
                     </el-icon>
                     Ver perfil
                   </el-dropdown-item>
+                  <el-dropdown-item @click="$router.push('/certificate')">
+                    <el-icon>
+                      <icons-certificate/>
+                    </el-icon>
+                    Meus certificados
+                  </el-dropdown-item>
                   <el-dropdown-item @click="doLogout()">
                     <el-icon>
                       <icons-arrow-right-from-bracket/>

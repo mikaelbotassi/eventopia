@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('registration_id')->constrained('registrations');
-            $table->unsignedBigInteger("code")->unique();
+            $table->string("code",50)->unique();
             $table->timestamps();
         });
     }
