@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\DTO\DTO;
+use App\DTO\Event\EventDTO;
 use App\DTO\Registration\RegistrationDTO;
 use App\Models\Event;
 use App\Models\Registration;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -25,8 +27,14 @@ class RegistrationService
 
     }
 
-    public function findById(int $id):DTO{
-        return RegistrationDTO::toDTO(Registration::findByOrFail($id));
+    /**
+     * @throws Exception
+     */
+    public function findById(int $id): ?DTO{
+        $registration = Registration::findByOrFail($id);
+        if(!$this->isAuthorizedOrTheOwner($registration)) return null;
+        $registration->event->ownerObj = User::findByOrFail($registration->event->owner);
+        return RegistrationDTO::toDTO($registration);
     }
 
     /**
@@ -77,12 +85,11 @@ class RegistrationService
     /**
      * @throws Exception
      */
-    public function getQrCodeByEvent(int $registration_id):string
+    public function getQrCodeById(int $registration_id):string
     {
-        if(!Registration::where('id',$registration_id)->exists())
-            throw new Exception("Inscrição não encontrada", 404);
-
         $registration = Registration::findByOrFail($registration_id);
+
+        if(!$this->isAuthorizedOrTheOwner($registration)) return false;
 
         $data = [
             'registration_id' => $registration->id,
@@ -111,7 +118,9 @@ class RegistrationService
             throw new Exception("Você não possui autorização para realizar esta operação", 403);
 
         if($registration->event->event_date > now())
-            throw new Exception("Não é possível definir presença antes do evento.", 403);
+            throw new Exception("Não é possível definir presença antes do evento.", 406);
+
+        if($registration->presence_date != '') return true;
 
         $registration->presence_date = now();
         $registration->save();
@@ -139,6 +148,39 @@ class RegistrationService
         ->orderBy('events.event_date')
         ->get();
         return RegistrationDTO::toDTOs($query->get());
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function isAuthorizedOrTheOwner(Registration $registration):bool{
+        if($registration->user_id != auth()->id() && $registration->event->owner != auth()->id())
+            throw new Exception("Você não tem autorização para realizar esta operação", 403);
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function exportCSV($event_id, array $filters): \Illuminate\Database\Eloquent\Collection|bool|array
+    {
+        $event = Event::findByOrFail($event_id);
+        if($event->owner != auth()->id())
+            throw new Exception("Você não tem autorização para realizar esta operação", 403);
+
+        if(!Registration::where('event_id', $event_id)->exists()) return false;
+
+        $query = Registration::query();
+        $query->where('event_id', '=', $event_id);
+
+        if($filters){
+            foreach ($filters as $filter){
+                $query->where($filter['column'],$filter['operator'],$filter['value']);
+            }
+        }
+
+        return $query->get();
+
     }
 
 }

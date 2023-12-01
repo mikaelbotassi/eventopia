@@ -119,6 +119,7 @@ Route::group([
         Route::post('', 'create');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
+        Route::post('/csv/{event_id}','getCSVByEvent');
         Route::get('/auth', 'getAllByAuthId');
         Route::get('/{id}', 'getById');
         Route::post('/filter', 'getAllWithFilter');

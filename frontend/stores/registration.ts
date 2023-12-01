@@ -4,6 +4,7 @@ import type CreateRegistration from '~/models/registration/CreateRegistration';
 
 export const useRegistrationStore = defineStore('registration', () => {
   const loading = ref(false);
+  const loadingQrCode = ref(false);
   const entities = ref(new Array<GetRegistration>());
   const userRegistrations = ref(new Array<GetRegistration>());
   const qtt = ref(0);
@@ -102,6 +103,48 @@ export const useRegistrationStore = defineStore('registration', () => {
     .finally(() => loading.value = false)
   }
 
+  async function getById(id:string|number){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    await $api.get(url + id)
+    .then((resp) => {
+        entity.value = resp.data.data;
+    })
+    .finally(() => {
+        loading.value = false;
+    });
+  }
+
+  async function getConfirmPresenceLink(id:number|string){
+    loadingQrCode.value = true;
+    const {$api} = useNuxtApp();
+    return await getQrCode(id)
+    .then((resp) => '/registration/confirm-presence/' + resp.data.data)
+    .finally(() => loadingQrCode.value = false);
+  }
+
+  
+  async function getQrCode(id:number|string){
+    const {$api} = useNuxtApp();
+    return await $api.get(url + 'qr-code/' + id);
+  }
+
+  async function confirmPresence(token:string){
+    const router = useRouter();
+    const {$api} = useNuxtApp();
+    await $api.get(`${$api.defaults.baseURL}/registration/confirm-presence/${token}`)
+    .then((resp) => {
+      toastSuccess(resp.data.message);
+    }).finally(() => router.push('/'))
+  }
+
+  async function getDowloadCsvLink(event_id:number|string, filters:[] = []){
+    const {$api} = useNuxtApp();
+    return await $api.post(`${url}csv/${event_id}`, filters, { responseType:'blob' }).then((resp) => {
+      return URL.createObjectURL(resp.data);
+    })
+  }
+
   return {
     loading,
     create,
@@ -110,11 +153,16 @@ export const useRegistrationStore = defineStore('registration', () => {
     getAllByFilters,
     filteredEntities,
     getAllByToken,
+    getQrCode,
     compareOwner,
     deleteById,
     userRegistrations,
     getAllEventRegistrationByUrl,
-    qtt
+    qtt,
+    getConfirmPresenceLink,
+    confirmPresence,
+    getDowloadCsvLink,
+    getById
   }
 
 })

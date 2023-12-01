@@ -1,5 +1,11 @@
 <template>
     <div class="p-5 border border-white" v-loading="loadingAction" v-if="!loading">
+      
+        <registrations-dowload-csv-button
+          :buttons="buttons"
+          :eventId="$route.params.id"
+        />
+
       <el-table :data="typeEvent ? entities : userRegistrations" dark>
         <template v-if="typeEvent">
           <el-table-column label="Nome do inscrito">
@@ -41,7 +47,9 @@
               </div>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item :icon="ElIconPrinter">Baixar QrCode</el-dropdown-item>
+                  <el-dropdown-item :icon="ElIconPrinter">
+                    <NuxtLink :to="'/registration/' + props.row.id">Ver QrCode</NuxtLink>
+                  </el-dropdown-item>
                   <el-dropdown-item @click="cancelRegistration(props.row.id)" :icon="ElIconClose">Cancelar Inscrição</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -61,7 +69,18 @@
       typeEvent: Boolean,
   })
 
-  const {getAllByToken, getAllEventRegistrationByUrl, deleteById} = useRegistrationStore();
+  import CsvButton from '~/models/registration/CsvButton';
+
+  const buttons= new Array<CsvButton>(
+        new CsvButton([], 'Todos os inscritos', ElIconList),
+        new CsvButton([{
+          column:'presence_date',
+          operator:'<>',
+          value:''
+        }], 'Apenas os presentes', ElIconChecked),
+  );
+
+  const {getAllByToken, getAllEventRegistrationByUrl, deleteById, getDowloadCsvLink} = useRegistrationStore();
   const {userRegistrations, loading, entities} = storeToRefs(useRegistrationStore());
 
   const isAsync = ref(false)

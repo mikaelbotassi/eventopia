@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTO\Registration\CreateRegistrationDTO;
 use App\DTO\Registration\RegistrationDTO;
 use App\DTO\Registration\UpdateRegistrationDTO;
+use App\Models\Registration;
 use App\Services\RegistrationService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +20,9 @@ class RegistrationController extends Controller
 
     }
 
+    /**
+     * @throws Exception
+     */
     public function getById($id):JsonResponse
     {
         $obj = $this->registrationService->findById($id);
@@ -32,7 +36,7 @@ class RegistrationController extends Controller
      */
     public function getQrCode($event_id):JsonResponse
     {
-        $obj = $this->registrationService->getQrCodeByEvent($event_id);
+        $obj = $this->registrationService->getQrCodeById($event_id);
         return response()->json([
             'data' => $obj
         ])->setStatusCode(200);
@@ -112,6 +116,14 @@ class RegistrationController extends Controller
             'qtt' => $objs->count(),
             'data' => $objs
         ])->setStatusCode(200);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getCSVByEvent($event_id, Request $request): \Illuminate\Http\Response
+    {
+        return Registration::exportCsv($this->registrationService->exportCSV($event_id, $request->all()));
     }
 
 }

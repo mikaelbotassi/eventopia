@@ -37,7 +37,7 @@
                     <NuxtLink class="text-white fill-white after:border-white" :to="'/login'">
                         Voltar
                     </NuxtLink>
-                    <el-button size="large" :loading="loading" color="#10d38d" @click="doSingUp()" dark plain>Enviar</el-button>
+                    <el-button size="large" :loading="loading" color="#10d38d" @click="doSignUp()" dark plain>Enviar</el-button>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
     const user = reactive(new CreateUser());
     const categories = ref();
 
-    const doSingUp = () => {
+    const doSignUp = () => {
         castToCategories();
         (async function() {
             if(await registerUser(user)) useRouter().push('/login');
@@ -66,6 +66,7 @@
 
     const castToCategories = () => {
         user.categories = [];
+        if(!categories.value) return true;
         categories.value.forEach((val) => {
             const newCategory = new GetCategories;
             newCategory.id = val;

@@ -10,6 +10,8 @@ use App\DTO\User\UserDTO;
 use App\Models\Category;
 use App\Models\User;
 use App\Utils\Functions;
+use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +34,7 @@ class UserService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(DTO $user):bool{
         $obj = User::findByOrFail(auth()->user()->id);
@@ -49,26 +51,9 @@ class UserService
             if($value != null) $obj->$name = $value;
 
         if(isset($arr['cpf_cnpj'])) {
-            $arr['cpf_cnpj'] = Functions::onlyNumbers($arr['cpf_cnpj']);
+            if(!$this->isCpfUnique($arr['cpf_cnpj'])) return false;
 
-            if(User::where('cpf_cnpj', $arr['cpf_cnpj'])->where('id', '!=', auth()->id())->exists()){
-                throw new ValidationException(
-                    validator()->make([], []),
-                    response()->json(['message' => 'O CPF ou CNPJ inserido já está sendo utilizado.'])->setStatusCode(422),
-                );
-            }
-
-            if(strlen($arr['cpf_cnpj']) < 11 ||
-                (strlen($arr['cpf_cnpj']) > 11 && !Functions::cnpjValid($arr['cpf_cnpj'])) ||
-                (strlen($arr['cpf_cnpj']) == 11 && !Functions::cpfValid($arr['cpf_cnpj']))){
-                throw new ValidationException(
-                    validator()->make([], []),
-                    response()->json(['message' => 'O CPF ou CNPJ inserido é inválido.'])->setStatusCode(422),
-                );
-            }
-
-            $obj->cpf_cnpj = $arr['cpf_cnpj'];
-
+            if(!$this->validateCpf($arr)) return false;
         }
 
         if(!$obj->save()) return false;
@@ -85,7 +70,7 @@ class UserService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(CreateUserDTO $user):bool{
         $obj = new User();
@@ -105,21 +90,9 @@ class UserService
 
         $arr['cpf_cnpj'] = Functions::onlyNumbers($arr['cpf_cnpj']);
 
-        if(User::where('cpf_cnpj', $arr['cpf_cnpj'])->exists()){
-            throw new ValidationException(
-                validator()->make([], []),
-                response()->json(['message' => 'O CPF ou CNPJ inserido já está sendo utilizado.'])->setStatusCode(422),
-            );
-        }
+        if(!$this->isCpfUnique($arr['cpf_cnpj'])) return false;
 
-        if(strlen($arr['cpf_cnpj']) < 11 ||
-        (strlen($arr['cpf_cnpj']) > 11 && !Functions::cnpjValid($arr['cpf_cnpj'])) ||
-        (strlen($arr['cpf_cnpj']) == 11 && !Functions::cpfValid($arr['cpf_cnpj']))){
-            throw new ValidationException(
-                validator()->make([], []),
-                response()->json(['message' => 'O CPF ou CNPJ inserido é inválido.'])->setStatusCode(422),
-            );
-        }
+        if(!$this->validateCpf($arr)) return false;
 
         $obj->cpf_cnpj = $arr['cpf_cnpj'];
 
@@ -138,6 +111,28 @@ class UserService
     public function delete():bool{
         $obj = User::findByOrFail(auth()->id());
         return $obj->delete();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function validateCpf(array $arr):bool{
+        if(strlen($arr['cpf_cnpj']) < 11 ||
+        (strlen($arr['cpf_cnpj']) > 11 && !Functions::cnpjValid($arr['cpf_cnpj'])) ||
+        (strlen($arr['cpf_cnpj']) == 11 && !Functions::cpfValid($arr['cpf_cnpj']))){
+            throw new Exception('O CPF ou CNPJ inserido é inválido.',422);
+        }
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function isCpfUnique(string $cpf):bool{
+        if(User::where('cpf_cnpj', $cpf)->exists()){
+            throw new Exception('O CPF ou CNPJ inserido já está sendo utilizado.',422);
+        }
+        return true;
     }
 
 }

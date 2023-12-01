@@ -21,7 +21,7 @@ export default class Utils{
         return this.mask(doc, doc.length > 11 ? '##.###.###/####-##' : '###.###.###-##');
     }
 
-    dateFormat(data) {
+    dateFormat(data:any) {
         if(!data) return data
         const date = new Date(data);
         
@@ -47,7 +47,7 @@ export default class Utils{
       }
       
 
-    getMonthName(mes, lang) {
+    getMonthName(mes:number, lang:string) {
         const en = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const pt = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
       
@@ -58,7 +58,7 @@ export default class Utils{
         return pt[mes - 1];
     }
 
-    getWeekName(dia, lang) {
+    getWeekName(dia:number, lang:string) {
         const en = ["Sunday", "Monday", "Thursday", "Wednesday", "Tuesday", "Friday", "Saturday"];
         const pt = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
       

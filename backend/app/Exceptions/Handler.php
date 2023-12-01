@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -47,6 +48,14 @@ class Handler extends ExceptionHandler
             ])->setStatusCode(405);
         }
 
+        if($e instanceof ModelNotFoundException){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'error' => $e->getMessage()
+            ])->setStatusCode(404);
+        }
+
         if ($e instanceof \Illuminate\Auth\AuthenticationException) {
             return response()->json([
                 'status' => 'error',
@@ -63,11 +72,20 @@ class Handler extends ExceptionHandler
             ])->setStatusCode(403);
         }
 
+        if($e->getCode() == 422){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'error' => $e->getMessage(),
+            ])->setStatusCode(422);
+        }
+
         return response()->json([
             'status' => 'error',
             'file' => $e->getFile(),
             'line' => $e->getLine(),
-            'message' => 'Ocorreu um erro durante o processamento da solicitação, contate nosso suporte técnico',
+//            'message' => 'Ocorreu um erro durante o processamento da solicitação, contate nosso suporte técnico',
+            'message' => $e->getMessage(),
             'error' => [
                 'code' => 500,
                 'description' => 'Ocorreu um erro interno do servidor'
