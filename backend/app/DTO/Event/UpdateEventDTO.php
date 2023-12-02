@@ -44,6 +44,7 @@ class UpdateEventDTO extends DTO
             'registration_validity' => [
                 'date',
                 'nullable',
+                'before_or_equal:event_date'
             ],
             'owner' => [
                 'integer',

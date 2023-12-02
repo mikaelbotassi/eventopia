@@ -9,7 +9,7 @@ class CertificateDTO extends DTO
 {
     public int|null $id;
     public Registration $registration;
-    public int $code;
+    public string $code;
     public string $created_at;
 
     public function __construct()

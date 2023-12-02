@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int id
  * @property int registration_id
  * @property Registration registration
- * @property int code
+ * @property string code
  * @method static where(string $string, int|string|null $id)
  */
 
@@ -23,6 +23,8 @@ class Certificate extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    protected $with = ['registration'];
 
     public function registration():BelongsTo{
         return $this->belongsTo(Registration::class, 'registration_id', 'id');

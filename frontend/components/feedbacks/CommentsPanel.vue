@@ -25,21 +25,6 @@
         <template v-if="!loading">
             <feedbacks-comment-card v-for="comment in entities" :key="comment.id" :comment="comment" :ownerUser="user"/>
         </template>
-
-        <!-- <article class="p-5 border-t border-white/50" v-if="!loading" v-for="comment in entities" :key="comment.id">
-            <div class="flex items-center gap-5">
-                <div class="w-[50px] h-[50px] mb-3 overflow-hidden rounded-circle flex-none">
-                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" class="w-full h-full object-cover" />
-                </div>
-                <div class="flex flex-col w-full items-start">
-                    <h3>{{ comment.author?.name }}</h3>
-                    <h5 class="uppercase font-bold text-xs mb-3">{{ comment.author?.email }}</h5>
-                </div>
-            </div>
-            <p class="text-left text-xs">
-                {{ comment.description }}
-            </p>
-        </article> -->
         <div class="flex items-center justify-center p-5" v-else>
             <LoadersCubeLoader />
         </div>

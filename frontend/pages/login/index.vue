@@ -22,7 +22,7 @@
                         </div> -->
                         <el-divider class="my-10" content-position="center">Ou</el-divider>
                         <div class="flex justify-center">
-                            <NuxtLink class="text-secondary text-lg fill-white after:border-secondary" :to="'/sing-up'">Criar conta</NuxtLink>
+                            <NuxtLink class="text-secondary text-lg fill-white after:border-secondary" :to="'/sign-up'">Criar conta</NuxtLink>
                         </div>
                     </form>
                 </div>

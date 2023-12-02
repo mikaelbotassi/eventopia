@@ -46,6 +46,7 @@ class CreateEventDTO extends DTO
                 'date',
                 'required',
                 'after:yesterday',
+                'before_or_equal:event_date'
             ],
             'categories' => [
                 'nullable',

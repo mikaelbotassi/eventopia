@@ -119,7 +119,10 @@ Route::group([
         Route::post('', 'create');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'delete');
+        Route::post('/csv/{event_id}','getCSVByEvent');
+        Route::get('/auth', 'getAllByAuthId');
         Route::get('/{id}', 'getById');
+        Route::post('/filter', 'getAllWithFilter');
         Route::get('', 'getAll');
         Route::get('qr-code/{registration_id}', 'getQrCode');
         Route::get('confirm-presence/{qrCode}', 'confirmPresence');
@@ -130,16 +133,17 @@ Route::group([
 Route::group([
 
     'prefix' => 'certificate',
-    'middleware' => 'auth:api'
 
 ], function () {
 
     Route::controller(CertificateController::class)->group(function (){
-        Route::post('', 'create');
-        Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'delete');
-        Route::get('/{id}', 'getById');
-        Route::get('', 'getAll');
+        Route::middleware('auth:api')->group(function (){
+            Route::post('/filter', 'getAllWithFilter');
+            Route::get('/auth', 'getAllByAuthId');
+            Route::get('/{id}', 'getById');
+            Route::get('', 'getAll');
+        });
+        Route::get('/code/{code}', 'getByCode');
     });
 
 });

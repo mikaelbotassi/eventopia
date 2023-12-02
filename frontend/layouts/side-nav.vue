@@ -17,6 +17,10 @@
         <el-icon class="fill-white"><icons-plus-square /></el-icon>
         <template #title>Adicionar</template>
       </el-menu-item>
+      <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1" @click="$router.push('/certificate/search')">
+        <el-icon class="fill-white"><icons-magnifying-glass /></el-icon>
+        <template #title>Procurar certificado</template>
+      </el-menu-item>
     </el-menu>
     <div class="container mx-auto p-5 flex flex-col items-center justify-start gap-10 w-full">
       <header class="mb-5 w-full flex items-center justify-center">
@@ -43,6 +47,12 @@
                       <icons-user/>
                     </el-icon>
                     Ver perfil
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="$router.push('/certificate/')">
+                    <el-icon>
+                      <icons-certificate/>
+                    </el-icon>
+                    Meus certificados
                   </el-dropdown-item>
                   <el-dropdown-item @click="doLogout()">
                     <el-icon>

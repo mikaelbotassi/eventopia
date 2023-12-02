@@ -82,7 +82,7 @@ div:where(.swal2-container) div:where(.swal2-popup){
     color: var(--dark) !important;
 }
 
-.el-tag{
+.el-tag:not(.no-style){
     background-color:var(--dark) !important;
     color:var(--secondary) !important;
     border-color:var(--secondary) !important;
@@ -91,3 +91,16 @@ div:where(.swal2-container) div:where(.swal2-popup){
 .rounded-circle{ border-radius:100% }
 
 .el-loading-mask{ background-color: rgba(var(--rgb-dark), .5) !important }
+
+.el-table {
+    --el-table-border-color: #fff !important;
+    --el-table-border: 1px solid  !important;
+    --el-table-text-color: #fff !important;
+    --el-table-header-text-color: #fff !important;
+    --el-table-row-hover-bg-color: transparent !important;
+    --el-table-current-row-bg-color: transparent !important;
+    --el-table-header-bg-color: var(--dark) !important;
+    --el-table-fixed-box-shadow: var(--el-box-shadow-light);
+    --el-table-bg-color: var(--dark) !important;
+    --el-table-tr-bg-color: var(--dark) !important;
+}

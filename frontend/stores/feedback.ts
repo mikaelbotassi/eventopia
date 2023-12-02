@@ -62,7 +62,7 @@ export const useFeedbackStore = defineStore('feedback', () => {
   async function getAllByFilter(filter:[]){
     loading.value = true;
     const {$api} = useNuxtApp();
-    return await $api.post('/event/filter', filter)
+    return await $api.post('/feedback/filter', filter)
     .then((resp) => {
       filteredEntities.value = resp.data.data;
       return true

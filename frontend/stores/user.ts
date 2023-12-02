@@ -119,6 +119,7 @@ export const useUserStore = defineStore('user', () => {
     compareOwner,
     deleteByToken,
     update,
+    confirmPassword,
     me
   }
 
