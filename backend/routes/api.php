@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GalleryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -144,6 +145,20 @@ Route::group([
             Route::get('', 'getAll');
         });
         Route::get('/code/{code}', 'getByCode');
+    });
+
+});
+
+Route::group([
+
+    'prefix' => 'gallery',
+
+], function () {
+
+    Route::controller(GalleryController::class)->group(function (){
+        Route::middleware('auth:api')->group(function (){
+            Route::post('', 'uploadImage');
+        });
     });
 
 });
