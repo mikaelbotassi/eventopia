@@ -35,7 +35,7 @@ class Event extends Model
         'deleted_at' => 'datetime',
     ];
 
-    protected $with = ['ownerObj'];
+    protected $with = ['ownerObj', 'categories'];
 
     public function ownerObj():BelongsTo{
         return $this->belongsTo(User::class, 'owner', 'id');

@@ -7,7 +7,7 @@
             <h2 class="text-white uppercase">{{owner}}</h2>
             <h3 class="bg-secondary/50 text-xs text-white py-2 px-3 rounded-full">{{ formater?.dateTimeFormat(eventDate) }}</h3>
         </div>
-        <NuxtLink :to="'/certificate/' + eventId" class="inset-0 absolute"/>
+        <NuxtLink :to="'/certificate/' + entityId" class="inset-0 absolute"/>
     </div>
 
 </template>
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 
     const props = defineProps({
-        eventId:Number,
+        entityId:Number,
         title:String,
         owner:String,
         eventDate:String

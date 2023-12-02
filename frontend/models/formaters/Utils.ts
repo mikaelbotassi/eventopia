@@ -69,4 +69,21 @@ export default class Utils{
         return pt[dia];
     }
 
+    dateFriendlyFormat(dataString:any) {
+        if(!dataString) return '';
+        const data = new Date(dataString.replace(/-/g, '/'));
+
+  const options:any = {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+
+  const formato = new Intl.DateTimeFormat('pt-BR', options);
+
+  return formato.format(data);
+    }
+
 }

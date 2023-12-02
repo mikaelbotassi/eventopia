@@ -5,7 +5,7 @@
       <div class="container flex flex-wrap" v-if="entities.length > 0">
         <article class="w-full md:w-1/2 lg:w-1/3 p-3" v-for="entity in entities" :key="entity.id">
           <certificates-certificate-card
-          :eventId="entity.registration?.event_id"
+          :entityId="entity.id"
           :title="entity.registration?.event?.title"
           :owner="entity.registration?.event?.owner_obj?.name"
           :eventDate="entity.registration?.event?.event_date"
@@ -49,7 +49,3 @@
   });
 
 </script>
-
-<style>
-
-</style>

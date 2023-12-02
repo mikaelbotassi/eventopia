@@ -78,8 +78,10 @@ class RegistrationService
      */
     public function delete(int $id):bool{
         $obj = Registration::findByOrFail($id);
+        if($obj->presence_date != '')
+            throw new Exception("Não é possível cancelar uma inscrição que já foi confirmada", 406);
         if($obj->user_id != auth()->id() && Event::findByOrFail($obj->event_id)->owner != auth()->id())
-            throw new Exception("You do not have privileges to perform this action");
+            throw new Exception("Você não tem autorização para realizar esta operação", 403);
         return $obj->delete();
     }
 

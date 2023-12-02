@@ -26,6 +26,11 @@ class CertificateService
 
     }
 
+    public function getByCode(string $code): DTO
+    {
+        return CertificateDTO::toDTO(Certificate::findByOrFail($code, 'code'));
+    }
+
     public function getAllWithFilter(array $filters):Collection{
         $query = Certificate::query();
 

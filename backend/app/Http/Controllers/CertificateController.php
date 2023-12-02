@@ -27,6 +27,14 @@ class CertificateController extends Controller
         ])->setStatusCode(200);
     }
 
+    public function getByCode($code):JsonResponse
+    {
+        $obj = $this->certificateService->getByCode($code);
+        return response()->json([
+            'data' => $obj
+        ])->setStatusCode(200);
+    }
+
     public function getAll():JsonResponse
     {
         $objs = $this->certificateService->getAll(new CertificateDTO());

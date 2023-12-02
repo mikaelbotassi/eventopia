@@ -52,6 +52,49 @@ export const useCertificateStore = defineStore('certificate', () => {
     });
   }
 
+  async function getByCode(code:string|number){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.get(url + 'code/' + code)
+    .then((resp) => {
+      entity.value = resp.data.data;
+      return true
+    })
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    });
+  }
+
+  async function searchCertificate(){
+    const {$swal} :any = useNuxtApp();
+    const router = useRouter();
+    return $swal.fire({
+      title: "Digite o código do certificado",
+      icon:"warning",
+      text: "Digite o código presente na parte inferior do certificado",
+      input: "text",
+      showCancelButton: true,
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: "var(--secondary)",
+      cancelButtonText: "Cancelar",
+      cancelButtonColor: "#bb2124",
+      showLoaderOnConfirm: true,
+      preConfirm: async (code:string) => {
+          await getByCode(code).then(() => {
+            router.push('/certificate/' + entity.value.id);
+          })
+      },
+      allowOutsideClick: () => !$swal.isLoading()
+    }).then((result:any) => {
+      if (result.isConfirmed) return true;
+      router.push('/')
+      return false;
+    });
+  }
+
+
+
   return {
     loading,
     entities,
@@ -59,6 +102,7 @@ export const useCertificateStore = defineStore('certificate', () => {
     getAll,
     getAllByFilter,
     filteredEntities,
+    searchCertificate,
     getById,
     qtt
   }
