@@ -18,9 +18,7 @@
       <span class="file-name">
         {{ file?.name }}
       </span>
-      <div class="remove-container">
-        <a class="remove" @click="removeFile(key)">Remove</a>
-      </div>
+      <a class="remove remove-container" @click="removeFile(key)">Remove</a>
     </div>
   </div>
 </template>
@@ -47,7 +45,8 @@ const emit = defineEmits({
   saved: (files) => {
     if (files) return true
     else return false
-  }
+  },
+  removed:Number
 })
 
 const files = ref([]);
@@ -95,6 +94,7 @@ const removeFile = (key) => {
     deleteImage(files.value[key].id).then((resp) => {
       if(resp){
         fadeOut(previews.value[key].parentElement).finally(() => {
+          emit('removed', files.value[key].id);
           files.value.splice(key, 1);
         });
       }
@@ -198,13 +198,14 @@ const submitFiles = () => {
         color: green;
     }
 
-    div.remove-container{
+    .remove-container{
         text-align: center;
         padding: 0.5rem;
+        display:block;
         background-color:#da4747
     }
 
-    div.remove-container a{
+    .remove-container{
         color: #fff;
         cursor: pointer;
     }

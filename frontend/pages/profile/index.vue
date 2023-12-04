@@ -38,7 +38,7 @@
     <div class="flex items-center justify-center p-5" v-else>
         <LoadersCubeLoader />
     </div>
-    <component :is="openUpdate ? userUpdate : 'div'" @save="openUpdate = false" @close="openUpdate = false" />
+    <component :is="openUpdate ? userUpdate : 'div'" @imageRemoved="entity.img = null" @save="openUpdate = false" @close="openUpdate = false" />
     
 </template>
 <script setup lang="ts">

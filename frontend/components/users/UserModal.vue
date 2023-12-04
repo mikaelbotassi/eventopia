@@ -12,6 +12,7 @@
             <gallery-file-upload
             model="user"
             @saved="insertIntoUser"
+            @removed="this.$emit('imageRemoved')"
             :loadedFiles="profileImg"
             />
           </div>
@@ -56,7 +57,7 @@
   import GetCategories from '~/models/category/GetCategories';
   import { cast } from '~/utils/index.ts'
 
-  const emit = defineEmits(['save','close']);
+  const emit = defineEmits(['save','close', 'imageRemoved']);
 
   const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
 
@@ -94,6 +95,8 @@
   const insertIntoUser = (file) => {
     entity.value.gallery_id = file.id
   }
+
+  const removeImage = (id:number) => entity.vale.gallery_id = null
 
   useAsyncData(
     'user',
