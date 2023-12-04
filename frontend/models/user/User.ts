@@ -46,6 +46,7 @@ export class OwnerUser{
 }
 
 export class UpdateUser{
+    gallery_id:number|null;
     name: string;
     cpf_cnpj: string;
     email: string;
@@ -53,6 +54,7 @@ export class UpdateUser{
     birth: string;
     categories:GetCategories[]|null;
     constructor() {
+        this.gallery_id = null;
         this.name = "";
         this.cpf_cnpj = "";
         this.email = "";

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\UploadImageRequest;
 use App\Models\Gallery;
+use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,5 +32,17 @@ class GalleryService
             return $gallery->id;
         }
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delete(int $id):bool{
+        $obj = Gallery::findByOrFail($id);
+        $imagePath = $obj->path.'/'.$obj->filename;
+        if(!$obj->delete()) return false;
+        if (Storage::exists("public/{$imagePath}"))
+            return Storage::delete("public/$imagePath");
+        throw new Exception("Não foi possível encontrar a imagem", 404);
     }
 }

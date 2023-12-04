@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\Certificate\CertificateDTO;
-use App\DTO\Certificate\CreateCertificateDTO;
-use App\DTO\Certificate\UpdateCertificateDTO;
 use App\Http\Requests\UploadImageRequest;
-use App\Services\CertificateService;
 use App\Services\GalleryService;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class GalleryController extends Controller
 {
@@ -37,5 +34,27 @@ class GalleryController extends Controller
             'message' => 'Unable to save Record data'
         ])->setStatusCode(400);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getImage($imageUrl): BinaryFileResponse
+    {
+        $imagePath = storage_path("app/public/{$imageUrl}");
+        if (Storage::exists("public/{$imageUrl}")) {
+            return response()->file($imagePath);
+        } else throw new Exception("Imagem não encontrada", 404);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delete($id):JsonResponse
+    {
+        if($this->galleryService->delete($id))
+            return response()->json(['message' => 'Imagem deletada com sucesso'])->setStatusCode(200);
+        return response()->json(['message' => 'Não foi possível deletar a imagem no momento, tente novamente mais tarde'])->setStatusCode(400);
+    }
+
 
 }

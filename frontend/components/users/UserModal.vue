@@ -7,6 +7,14 @@
       </modal-header>
       <modal-body>
         <div class="grid w-full grid-cols-2 gap-4 mb-5">
+          <div class="col-span-2">
+            <h2 class="text-xl font-bold mb-5">Foto de perfil</h2>
+            <gallery-file-upload
+            model="user"
+            @saved="insertIntoUser"
+            :loadedFiles="profileImg"
+            />
+          </div>
           <el-input v-model="entity.name" class="col-span-2" size="large" placeholder="Insira seu nome completo" type="text" name="fullname"/>
           <el-input v-model="entity.cpf_cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" size="large" placeholder="Insira seu CPF ou CNPJ" type="text"/>
           <el-input v-model="entity.email" size="large" placeholder="Insira seu E-mail" type="email" name="email"/>
@@ -50,7 +58,10 @@
 
   const emit = defineEmits(['save','close']);
 
+  const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
+
   const entity = ref(new UpdateUser())
+  const profileImg = ref([])
   const categories = ref([]);
 
   const {me} = useUserStore();
@@ -80,10 +91,20 @@
       });
   }
 
+  const insertIntoUser = (file) => {
+    entity.value.gallery_id = file.id
+  }
+
   useAsyncData(
     'user',
     async () => await me().then((resp) => {
       cast(entity.value, resp)
+      if(resp.img){
+        profileImg.value.push({
+          id:resp.img?.id,
+          src:`${baseApiUrl}/gallery/${resp.img?.path}/${resp.img?.filename}`
+        });
+      }
       entity.value.categories.forEach((val) => categories.value.push(val.id))
     })
   );

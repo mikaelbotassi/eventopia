@@ -22,12 +22,11 @@ class UploadImageRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array|string>
-     * @throws ReflectionException
      */
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
             'model' => [
                 'required',
                 'string',

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Utils\Database\EloquentFindable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string password
  * @property int[] categories
  * @property Certificate[] certificates
+ * @property Gallery img
+ * @property int gallery_id
  * @property Feedback[] feedbacks
  * @method static where(string $string, mixed $user_id)
  */
@@ -62,6 +65,8 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
+    protected $with = ['img'];
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -78,6 +83,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function feedbacks():HasMany{
         return $this->hasMany(Feedback::class, 'user_id', 'id');
+    }
+    public function img():BelongsTo{
+        return $this->belongsTo(Gallery::class, 'gallery_id', 'id');
     }
 
 }

@@ -158,7 +158,9 @@ Route::group([
     Route::controller(GalleryController::class)->group(function (){
         Route::middleware('auth:api')->group(function (){
             Route::post('', 'uploadImage');
+            Route::delete('{id}', 'delete');
         });
+        Route::get('{imageUrl}', 'getImage')->where('imageUrl', '.*');;
     });
 
 });
