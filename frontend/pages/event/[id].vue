@@ -1,8 +1,13 @@
 <template>
-    <div v-if="!loading">
+    <div class="w-full" v-if="!loading">
         <article class="bg-gray-700 pb-10 text-white relative shadow-lg rounded-xl overflow-hidden">
             <div class="aspect-video relative">
-                <img src="https://cdn.wallpapersafari.com/41/36/EwIcFb.jpg" alt="..." class="object-fit-cover" />
+                <el-carousel v-if="entity.gallery && entity.gallery.length > 0" :autoplay="false" trigger="click" height="100%" class="w-full h-[500px]">
+                    <el-carousel-item class="h-full" v-for="image in entity.gallery" :key="image">
+                        <img :src="`${baseApiUrl}/gallery/${image?.path}/${image?.filename}`" class="w-full object-cover " alt="profile picture" />
+                    </el-carousel-item>
+                </el-carousel>
+                <img v-else src="~/assets/img/empty.jpg" class="w-full h-[500px] object-cover"/>
                 <el-dropdown v-show="isOwner" class="absolute top-10 right-10" trigger="click">
                     <span class="el-dropdown-link bg-gray-700 px-4 py-2 rounded-full">
                         <icons-ellipsis-vertical class="fill-white text-xl"/>
@@ -22,7 +27,7 @@
                 </el-dropdown>
             </div>
             <div class="p-4 pt-2 text-center event-card-body relative rounded-4" style="z-index:1">
-                <h1 class="font-bold text-3xl mb-10">{{ entity.title }}</h1>
+                <h1 class="font-bold text-3xl my-10">{{ entity.title }}</h1>
                 <div class="flex justify-center items-center gap-3 mb-10">
                     <el-tag v-for="category in entity?.categories" :key="category.id">
                         {{ category.name }}
@@ -64,7 +69,7 @@
     <div class="flex items-center justify-center p-5" v-else>
         <LoadersCubeLoader />
     </div>
-    <component :entityId="entity.id" :is="openUpdate ? eventUpdate : 'div'" @save="openUpdate = false" @close="openUpdate = false" />
+    <component :entityId="entity.id" :is="openUpdate ? eventUpdate : 'div'" @save="savedForm()" @close="openUpdate = false" />
     
 </template>
 <script setup lang="ts">
@@ -82,6 +87,8 @@
 
     const {$swal} = useNuxtApp();
 
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
+
     const eventUpdate = shallowRef(resolveComponent('EventsEventModalForm'));
 
     const openUpdate = ref(false);
@@ -94,6 +101,11 @@
     const {qtt} = storeToRefs(useFeedbackStore());
 
     const {entity, loading} = storeToRefs(eventStore);
+
+    const savedForm = () => {
+        openUpdate.value = false;
+        getById(Number(route.params.id))
+    }
 
     const deleteEntity = () => {
         $swal.fire({
@@ -130,17 +142,6 @@
 
 </script>
 <style scoped>
-.event-card-body::after{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:16px;
-  background-color:rgb(55 65 81 / 1) !important;
-  top:-1rem;
-  left:0;
-  border-top-left-radius:1.5rem;
-  border-top-right-radius:1.5rem;
-}
 
 .el-tabs--border-card {
     background: rgb(31 41 55 / var(--tw-bg-opacity)) !important;

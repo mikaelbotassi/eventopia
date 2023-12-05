@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('img')->nullable();
+            $table->foreignId('gallery_id')->nullable()->constrained('galleries')->nullOnDelete();
             $table->string('cpf_cnpj', 20)->unique();
             $table->date('birth');
             $table->string('email', 191)->unique();

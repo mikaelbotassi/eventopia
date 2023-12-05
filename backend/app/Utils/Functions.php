@@ -3,6 +3,10 @@
 namespace App\Utils;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use ReflectionException;
 
 abstract class Functions
 {
@@ -338,6 +342,18 @@ abstract class Functions
         }
 
         return $string;
+    }
+
+    public static function getAllModelNames(): Collection
+    {
+        $modelsPath = app_path('Models');
+
+        $modelFiles = glob("{$modelsPath}/*.php");
+
+        return collect($modelFiles)->map(function ($file) {
+            $className = pathinfo($file, PATHINFO_FILENAME);
+            return Str::snake($className);
+        });
     }
 
 }

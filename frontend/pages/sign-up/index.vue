@@ -44,6 +44,9 @@
     </div>
 </template>
 <script setup lang="ts">
+
+    import { UploadFilled } from '@element-plus/icons-vue'
+
     import { CreateUser } from '~/models/user/User';
     import GetCategories from '~/models/category/GetCategories';
     definePageMeta({
@@ -51,18 +54,25 @@
     })
     
     const { getAll } = useCategoryStore();
+    const { uploadImage } = useGalleryStore();
     const { loading, entities } = storeToRefs(useCategoryStore());
     const { registerUser } = useUserStore();
 
     const user = reactive(new CreateUser());
     const categories = ref();
 
+    const img = ref();
+    
     const doSignUp = () => {
         castToCategories();
         (async function() {
             if(await registerUser(user)) useRouter().push('/login');
         })();
     };
+    
+    const sendImage = (file) => {
+
+    }
 
     const castToCategories = () => {
         user.categories = [];

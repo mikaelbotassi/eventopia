@@ -12,6 +12,7 @@ class UpdateEventDTO extends DTO
     public string|null $urlLocalization;
     public string|null $description;
     public array|null $categories = [];
+    public array|null $gallery = [];
     public int|null $workload;
     public string|null $registration_validity;
     public function __construct()
@@ -57,6 +58,13 @@ class UpdateEventDTO extends DTO
             ],
             'categories.*.id' => [
                 'exists:categories,id'
+            ],
+            'gallery' => [
+                'nullable',
+                'array'
+            ],
+            'gallery.*.id' => [
+                'exists:galleries,id'
             ]
         ]);
     }

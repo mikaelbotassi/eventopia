@@ -3,7 +3,10 @@
         <article class="bg-white w-full text-dark relative shadow-lg rounded-xl overflow-hidden">
             <header class="bg-secondary p-10 flex gap-10">
                 <div class="aspect-square overflow-hidden flex items-center justify-center w-[150px] h-[150px] rounded-full">
-                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" class="w-full object-cover " alt="profile picture" />
+                    <img v-if="entity.img" :src="`${baseApiUrl}/gallery/${entity.img?.path}/${entity.img?.filename}`" class="w-full object-cover " alt="profile picture" />
+                    <div class="bg-white w-full h-full flex items-end justify-center" v-else>
+                        <icons-user class="w-3/4 h-3/4"/>
+                    </div>
                 </div>
                 <div class="flex flex-col justify-center">
                     <h1 class="text-3xl font-bold uppercase mb-3">{{ entity?.name }}</h1>
@@ -35,7 +38,7 @@
     <div class="flex items-center justify-center p-5" v-else>
         <LoadersCubeLoader />
     </div>
-    <component :is="openUpdate ? userUpdate : 'div'" @save="openUpdate = false" @close="openUpdate = false" />
+    <component :is="openUpdate ? userUpdate : 'div'" @imageRemoved="entity.img = null" @save="openUpdate = false" @close="openUpdate = false" />
     
 </template>
 <script setup lang="ts">
@@ -49,6 +52,8 @@
     const router = useRouter();
 
     const formater = new Utils();
+
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
 
     const {$swal} = useNuxtApp();
 
@@ -82,6 +87,7 @@
         'owner',
         async () => {
             asyncExecuted.value = true;
+            
             await getByToken();
         }
     );

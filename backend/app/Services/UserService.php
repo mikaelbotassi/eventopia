@@ -51,9 +51,11 @@ class UserService
             if($value != null) $obj->$name = $value;
 
         if(isset($arr['cpf_cnpj'])) {
+            $arr['cpf_cnpj'] = Functions::onlyNumbers($arr['cpf_cnpj']);
             if(!$this->isCpfUnique($arr['cpf_cnpj'])) return false;
 
             if(!$this->validateCpf($arr)) return false;
+            $obj->cpf_cnpj = $arr['cpf_cnpj'];
         }
 
         if(!$obj->save()) return false;
@@ -129,7 +131,7 @@ class UserService
      * @throws Exception
      */
     private function isCpfUnique(string $cpf):bool{
-        if(User::where('cpf_cnpj', $cpf)->exists()){
+        if(User::where('cpf_cnpj', $cpf)->where('id','<>',auth()->id())->exists()){
             throw new Exception('O CPF ou CNPJ inserido já está sendo utilizado.',422);
         }
         return true;

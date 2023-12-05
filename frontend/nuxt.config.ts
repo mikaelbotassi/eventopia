@@ -11,7 +11,8 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      baseFrontUrl: 'http://localhost:3000'
+      baseFrontUrl: 'http://localhost:3000',
+      baseApiUrl: 'http://localhost:80',
     }
   }
 })
