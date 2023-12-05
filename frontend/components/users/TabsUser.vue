@@ -6,6 +6,7 @@
                     <events-event-card
                     v-for="(entity,i) in filteredEntities" :key="i"
                     :id="entity.id"
+                    :img="`${baseApiUrl}/gallery/${entity.gallery[0]?.path}/${entity.gallery[0]?.filename}`"
                     :title="entity.title"
                     :event_date="entity.event_date"
                     :localization="entity.localization"
@@ -36,6 +37,7 @@
     const eventStore = useEventStore();
     const { filteredEntities, loading } = storeToRefs(eventStore);
     const { getAllByFilter } = eventStore;
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
     const { getAllByToken } = useRegistrationStore();
 
     const isAsync = ref(false);

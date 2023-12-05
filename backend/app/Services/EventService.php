@@ -6,6 +6,7 @@ use App\DTO\Event\EventDTO;
 use App\DTO\DTO;
 use App\Models\Category;
 use App\Models\Event;
+use App\Models\Gallery;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,11 @@ class EventService
             $categories = $arr['categories'];
             unset($arr['categories']);
         }
+        $gallery = null;
+        if(isset($arr['gallery'])) {
+            $gallery = $arr['gallery'];
+            unset($arr['gallery']);
+        }
 
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
@@ -73,6 +79,11 @@ class EventService
         if($categories){
             foreach ($categories as $arrObj){
                 $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
+            }
+        }
+        if($gallery){
+            foreach ($gallery as $arrObj){
+                $obj->gallery()->attach(Gallery::findByOrFail($arrObj['id']));
             }
         }
 
@@ -95,6 +106,12 @@ class EventService
             unset($arr['categories']);
         }
 
+        $gallery = null;
+        if(isset($arr['gallery'])) {
+            $gallery = $arr['gallery'];
+            unset($arr['gallery']);
+        }
+
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
 
@@ -106,6 +123,14 @@ class EventService
                 $obj->categories()->attach(Category::findByOrFail($arrObj['id']));
             }
         }
+
+        if($gallery){
+            $obj->gallery()->detach();
+            foreach ($gallery as $arrObj){
+                $obj->gallery()->attach(Gallery::findByOrFail($arrObj['id']));
+            }
+        }
+
         return true;
     }
 

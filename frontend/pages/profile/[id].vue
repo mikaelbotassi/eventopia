@@ -3,7 +3,7 @@
         <article class="bg-white w-full text-dark relative shadow-lg rounded-xl overflow-hidden">
             <header class="bg-secondary p-10 flex gap-10">
                 <div class="aspect-square overflow-hidden flex items-center justify-center w-[150px] h-[150px] rounded-full">
-                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" class="w-full object-cover " alt="profile picture" />
+                    <img v-if="entity.img" :src="`${baseApiUrl}/gallery/${entity.img?.path}/${entity.img?.filename}`" class="w-full object-cover " alt="profile picture" />
                 </div>
                 <div class="flex flex-col justify-center">
                     <h1 class="text-3xl font-bold uppercase mb-3">{{ entity?.name }}</h1>
@@ -35,6 +35,8 @@
     const {$swal} = useNuxtApp();
 
     const {getById, compareOwner, deleteById} = useUserStore();
+
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
 
     const {entity, loading} = storeToRefs(useUserStore());
 

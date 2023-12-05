@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('event_gallery', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
+            $table->foreignId('gallery_id')->constrained('galleries')->onDelete('cascade');
             $table->timestamps();
         });
     }

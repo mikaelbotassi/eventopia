@@ -55,6 +55,7 @@ class UserService
             if(!$this->isCpfUnique($arr['cpf_cnpj'])) return false;
 
             if(!$this->validateCpf($arr)) return false;
+            $obj->cpf_cnpj = $arr['cpf_cnpj'];
         }
 
         if(!$obj->save()) return false;

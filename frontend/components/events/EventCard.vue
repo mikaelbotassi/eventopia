@@ -1,7 +1,8 @@
 <template>
   <article class="bg-gray-700 text-white relative shadow-lg rounded-xl overflow-hidden">
       <div class="aspect-video">
-          <img src="https://cdn.wallpapersafari.com/41/36/EwIcFb.jpg" alt="..." class="object-fit-cover" />
+          <img :src="img ? img : `@/assets/img/empty.jpg`" alt="..." class="w-full h-full object-cover" v-if="img" />
+          <img v-else src="@/assets/img/empty.jpg" alt="..." class="w-full h-full object-cover" />
       </div>
       <div class="p-4 pt-2 event-card-body relative rounded-4" style="z-index:1">
         <h5 class="fw-bold mb-3">{{ title }}</h5>
@@ -30,7 +31,8 @@
     title: String,
     event_date: String,
     localization: String,
-    description: String
+    description: String,
+    img: String
   })
 
 </script>

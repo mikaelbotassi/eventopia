@@ -12,6 +12,7 @@ class EventDTO extends DTO
     public string|null $title;
     public string|null $event_date;
     public Collection|null $categories = null;
+    public Collection|null $gallery = null;
     public string|null $localization;
     public string|null $urlLocalization;
     public string|null $description;

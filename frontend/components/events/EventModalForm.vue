@@ -8,6 +8,17 @@
       <modal-body>
         <div class="flex flex-wrap">
 
+          <div class="w-full p-3">
+            <h2 class="text-xl font-bold mb-5">Fotos do evento</h2>
+            <gallery-file-upload
+            model="event"
+            @saved="insertIntoEvent"
+            :multiple="true"
+            @removed="removeImage"
+            :loadedFiles="eventGallery"
+            />
+          </div>
+
           <el-form-item class="w-full p-3" label="Título do evento">
             <el-input v-model="obj.title" size="large" placeholder="Insira o título do evento" type="text" name="title"/>
           </el-form-item>
@@ -83,6 +94,7 @@
 
   import { CreateEvent, UpdateEvent } from '~/models/event/Event';
   import GetCategories from '~/models/category/GetCategories';
+  import GetGallery from '~/models/gallery/GetGallery';
   import { cast } from '~/utils/index.ts'
 
   const props = defineProps({
@@ -103,6 +115,10 @@
 
   const categories = ref([]);
 
+  const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
+
+  const eventGallery = ref([]);
+
   const obj = props.entityId <= 0 ? reactive(new CreateEvent()) : reactive(cast(new UpdateEvent(), entity.value));
   
   obj.categories?.forEach((val) => categories.value.push(val.id))
@@ -119,8 +135,28 @@
     });
   }
 
+  const insertIntoEvent = (file) => {
+    obj.gallery = file
+  }
+
+  const removeImage = (id:number) => {
+    obj.gallery = obj.gallery.filter(gallery => gallery.id !== id);
+    eventGallery.value = eventGallery.value.filter(gallery => gallery.id !== id);
+    entity.value.gallery = entity.value.gallery.filter(gallery => gallery.id !== id);
+  }
+
   onMounted(() => {
     getAll();
+    if(obj.gallery){
+      if(obj.gallery.length > 0){
+        obj.gallery.forEach((el) => {
+          eventGallery.value.push({
+            id:el?.id,
+            src:`${baseApiUrl}/gallery/${el?.path}/${el?.filename}`
+          });
+        })
+      }
+    }
   })
   
   function formSave(){

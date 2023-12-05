@@ -5,6 +5,7 @@
                 <events-event-card
                 v-for="(entity,i) in entities" :key="i"
                 :id="entity.id"
+                :img="entity.gallery.length > 0 ? `${baseApiUrl}/gallery/${entity.gallery[0]?.path}/${entity.gallery[0]?.filename}` : null"
                 :title="entity.title"
                 :event_date="formater?.dateTimeFormat(entity.event_date)"
                 :localization="entity.localization"
@@ -27,6 +28,8 @@
 
     import Utils from '~/models/formaters/Utils';
     const formater = new Utils();
+
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
 
     const {getAll} = useEventStore();
     const {entities,loading} = storeToRefs(useEventStore());

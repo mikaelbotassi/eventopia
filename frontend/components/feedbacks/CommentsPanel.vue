@@ -3,7 +3,10 @@
         <div class="p-5">
             <div class="flex items-center gap-5">
                 <div class="w-[50px] h-[50px] mb-3 overflow-hidden rounded-circle flex-none">
-                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" class="w-full h-full object-cover" />
+                    <img v-if="user.img" :src="`${baseApiUrl}/gallery/${user.img?.path}/${user.img?.filename}`" class="w-full h-full object-cover" alt="profile picture" />
+                    <div class="bg-white w-full h-full flex items-end justify-center" v-else>
+                        <icons-user class="w-3/4 h-3/4"/>
+                    </div>
                 </div>
                 <div class="flex flex-col w-full items-start">
                     <h3>{{ user.name }}</h3>
@@ -36,6 +39,7 @@
     import {OwnerUser} from '~/models/user/User'
 
     const {loading,entities} = storeToRefs(useFeedbackStore());
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
     const {me} = useAuthStore();
     const {create} = useFeedbackStore();
     const route = useRoute();
