@@ -6,7 +6,7 @@
       :collapse="isCollapse"
     >
       <el-menu-item class="group flex flex-col py-3 h-fit gap-1 border-primary text-white hover:bg-primary hover:text-primary" index="2">
-          <img src="~/assets/img/brand.png" class="w-[75px]" />
+          <img src="~/assets/img/brand.png" class="w-[120px]" />
       </el-menu-item>
       <el-divider class="opacity-25 border-secondary"></el-divider>
       <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1" @click="$router.push('/')">
