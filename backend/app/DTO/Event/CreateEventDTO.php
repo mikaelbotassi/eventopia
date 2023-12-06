@@ -54,7 +54,7 @@ class CreateEventDTO extends DTO
                 'array'
             ],
             'categories.*.id' => [
-                'exists:galleries,id'
+                'exists:categories,id'
             ],
             'gallery' => [
                 'nullable',
