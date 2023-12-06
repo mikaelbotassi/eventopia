@@ -52,8 +52,8 @@ class UserService
 
         if(isset($arr['cpf_cnpj'])) {
             $arr['cpf_cnpj'] = Functions::onlyNumbers($arr['cpf_cnpj']);
-            if(!$this->isCpfUnique($arr['cpf_cnpj'])) return false;
 
+            if(!$this->isCpfUnique($arr['cpf_cnpj'])) return false;
             if(!$this->validateCpf($arr)) return false;
             $obj->cpf_cnpj = $arr['cpf_cnpj'];
         }
