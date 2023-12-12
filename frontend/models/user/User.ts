@@ -1,15 +1,19 @@
+import GetCategories from '../category/GetCategories';
+
 export class CreateUser{
     name: string;
     cpf_cnpj: string;
     email: string;
     password: string;
     birth: string;
+    categories:GetCategories[]|null;
     constructor() {
         this.name = "";
         this.cpf_cnpj = "";
         this.email = "";
         this.password = "";
         this.birth = '';
+        this.categories = null;
     }
 
 }
@@ -28,6 +32,7 @@ export class OwnerUser{
     email: string;
     password: string;
     birth: string;
+    categories:GetCategories[]|null;
     constructor() {
         this.id = 0;
         this.name = "";
@@ -35,27 +40,27 @@ export class OwnerUser{
         this.email = "";
         this.password = "";
         this.birth = '';
+        this.categories = null;
     }
 
 }
-// public string|null $name;
-//     public string|null $email;
-//     public string|null $cpf_cnpj;
-//     public string|null $password;
-//     public string|null $birth;
-//     public array|null $categories = [];
+
 export class UpdateUser{
+    gallery_id:number|null;
     name: string;
     cpf_cnpj: string;
     email: string;
     password: string;
     birth: string;
+    categories:GetCategories[]|null;
     constructor() {
+        this.gallery_id = null;
         this.name = "";
         this.cpf_cnpj = "";
         this.email = "";
         this.password = "";
         this.birth = '';
+        this.categories = null;
     }
 
 }

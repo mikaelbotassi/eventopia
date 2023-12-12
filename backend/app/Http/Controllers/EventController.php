@@ -66,6 +66,9 @@ class EventController extends Controller
         return response()->json(['message' => 'Não foi possível alterar o evento no momento, tente novamente mais tarde'])->setStatusCode(400);
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete($id):JsonResponse
     {
         if($this->eventService->delete($id))

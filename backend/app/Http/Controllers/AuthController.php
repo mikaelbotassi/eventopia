@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -16,9 +13,11 @@ class AuthController extends Controller
      *
      * @return void
      */
+    private AuthService $authService;
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh']]);
+        $this->authService = new AuthService();
     }
 
     /**
@@ -39,6 +38,14 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token, 'Login efetuado com sucesso');
+    }
+
+    public function validatePassword(Request $request):JsonResponse
+    {
+        $request->validate(['password' => 'required|string|max:20']);
+        if($this->authService->validatePassword($request->input('password')))
+            return response()->json(['message' => 'Senha válida'])->setStatusCode(200);
+        return response()->json(['message' => 'Senha inválida'])->setStatusCode(406);
     }
 
     /**
@@ -89,6 +96,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'message' => $message,
+            'user_id' => auth()->id(),
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'expiration_time' => now()->addSeconds(auth()->factory()->getTTL() * 60),

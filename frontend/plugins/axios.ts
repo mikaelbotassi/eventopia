@@ -34,35 +34,32 @@ export default defineNuxtPlugin(async () => {
                 const router = useRouter();
                 const route = useRoute();
                 switch (error.response.status) {
-                    case 400:
-                    
-                    //do something
-                    break;
                 
                     case 401:
-                        if(route.name !== 'login'){
-                            router.replace({
-                                path: "/logout"
-                            });
-                        }
+                        setTimeout(() => {
+                            if(route.name !== 'login'){
+                                router.replace({
+                                    path: "/logout"
+                                });
+                            }
+                        },1000)
                         break;
                     case 403:
-                        if(route.name !== 'login'){
+                        setTimeout(() => {
+                            if(route.name !== 'login'){
+                                router.replace({
+                                    path: "/"
+                                });
+                            }
+                        },1000)
+                        break;
+                    case 404:
+                        setTimeout(() => {
                             router.replace({
                                 path: "/"
                             });
-                        }
+                        },1000)
                         break;
-                    case 404:
-                        break;
-                    case 502:
-                        setTimeout(() => {
-                            const router = useRouter();
-                            useRouter().replace({
-                            path: "/logout",
-                            });
-                        }, 1000);
-                    break;
                 }
                 return Promise.reject(error.response);
             }

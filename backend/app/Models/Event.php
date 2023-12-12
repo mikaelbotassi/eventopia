@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property User ownerObj
  * @property User registrations
  * @property int owner
+ * @property Category[] categories
+ * @property Gallery[] gallery
  * @method static where(string $string, int $int)
  */
 
@@ -35,12 +37,22 @@ class Event extends Model
         'deleted_at' => 'datetime',
     ];
 
+    protected $with = ['ownerObj', 'categories', 'gallery'];
+
     public function ownerObj():BelongsTo{
         return $this->belongsTo(User::class, 'owner', 'id');
     }
 
     public function registrations():BelongsToMany{
         return $this->belongsToMany(User::class, 'registrations');
+    }
+
+    public function categories():BelongsToMany{
+        return $this->belongsToMany(Category::class, 'event_categories');
+    }
+
+    public function gallery():BelongsToMany{
+        return $this->belongsToMany(Gallery::class, 'event_gallery');
     }
 
 }

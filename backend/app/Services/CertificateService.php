@@ -26,8 +26,35 @@ class CertificateService
 
     }
 
+    public function getByCode(string $code): DTO
+    {
+        return CertificateDTO::toDTO(Certificate::findByOrFail($code, 'code'));
+    }
+
+    public function getAllWithFilter(array $filters):Collection{
+        $query = Certificate::query();
+
+        foreach ($filters as $filter){
+            $query->where($filter['column'],$filter['operator'],$filter['value']);
+        }
+
+        return CertificateDTO::toDTOs($query->get());
+
+    }
+
     public function findById(int $id):DTO{
         return CertificateDTO::toDTO(Certificate::findByOrFail($id));
+    }
+
+    public function getAllByAuthId(): Collection
+    {
+        $query = Certificate::query();
+        $query->whereIn('registration_id', function ($query) {
+            $query->select('id')
+                ->from('registrations')
+                ->where('user_id', auth()->id());
+        });
+        return CertificateDTO::toDTOs($query->get());
     }
 
     /**
@@ -54,20 +81,12 @@ class CertificateService
         return $obj->save();
     }
 
-    public function update(DTO $objDto, int $id):bool{
-        $obj = Certificate::findByOrFail($id);
-        $arr = $objDto->toArray();
-        foreach ($arr as $name => $value)
-            if($value != null) $obj->$name = $value;
-        return $obj->save();
-    }
-
     /**
      * @throws Exception
      */
     public function delete(int $id):bool{
         $obj = Certificate::findByOrFail($id);
-        if($obj->user_id != auth()->id() || Event::findByOrFail('id', $obj->event_id)->owner != auth()->id())
+        if($obj->registration->user_id != auth()->id() || Event::findByOrFail('id', ($obj->registration->event->owner != auth()->id())))
             throw new Exception("You do not have privileges to perform this action");
         return $obj->delete();
     }

@@ -6,15 +6,15 @@
                     <div class="flex items-center mb-10">
                         <img src="~/assets/img/brand.png" alt="" class="max-w-full h-[75px]">
                     </div>
-                    <h1 class="text-secondary text-3xl mb-5 font-bold">BEM VINDO AO <span class="text-white">EVENTOPIA</span>!</h1>
+                    <h1 class="text-secondary text-3xl mb-5 font-bold">BEM VINDO AO <span class="text-white">SEUEVENTO.COM</span>!</h1>
                     <p class="text-white mb-5">Digite seus dados abaixo.</p>
                     <form @submit.prevent="send">
                         <el-input v-model="email" size="large" placeholder="Insira seu E-mail" type="email" name="email" class="mb-5"/>
                         <el-input v-model="password" size="large" placeholder="Insira sua senha" type="password" class="mb-5" name="password" show-password/>
                         <div class="flex items-center justify-between mb-5">
-                            <el-link class="text-white fill-white after:border-white" href="/">
+                            <NuxtLink class="text-white fill-white after:border-white" :to="'/'">
                                 Voltar
-                            </el-link>
+                            </NuxtLink>
                             <el-button size="large" native-type="submit" color="#10d38d" :loading="loading" dark plain>Entrar</el-button>
                         </div>
                         <!-- <div class="flex justify-end">
@@ -22,21 +22,21 @@
                         </div> -->
                         <el-divider class="my-10" content-position="center">Ou</el-divider>
                         <div class="flex justify-center">
-                            <el-link class="text-secondary text-lg fill-white after:border-secondary" href="/sing-up">Criar conta</el-link>
+                            <NuxtLink class="text-secondary text-lg fill-white after:border-secondary" :to="'/sign-up'">Criar conta</NuxtLink>
                         </div>
                     </form>
                 </div>
                 <div class="rounded-l-2xl hidden lg:block d-lg-block p-3 bg-secondary bg-opacity-50">
                         <div class="flex flex-col justify-between p-5 rounded-3 h-full">
-                            <h2 class="font-bold text-white text-3xl mb-5">Eventopia</h2>
+                            <h2 class="font-bold text-white text-3xl mb-5">SeuEvento.com</h2>
                             <div class="mb-5">
                                 <p class="text-primary">
-                                    Descubra o Eventopia, uma inovadora plataforma de eventos que conecta idealizadores, locadores de locais, fornecedores e instituições de educação. Encontre, participe e organize eventos com facilidade, promovendo uma colaboração sem precedentes.
+                                    Descubra o SeuEvento.com, uma inovadora plataforma de eventos que conecta idealizadores, locadores de locais, fornecedores e instituições de educação. Encontre, participe e organize eventos com facilidade, promovendo uma colaboração sem precedentes.
                                 </p>
                             </div>
                             <div class="bg-gradient-primary bg-opacity-50 shadow-lg rounded-3 p-3 text-white">
                                 <div class="">
-                                    Desfrute de uma busca intuitiva, comunicação eficiente, e gestão de documentos simplificada. Eventopia redefine a experiência de eventos, criando uma comunidade envolvente que impulsiona o sucesso em todas as áreas. Conecte-se ao futuro dos eventos hoje mesmo!
+                                    Desfrute de uma busca intuitiva, comunicação eficiente, e gestão de documentos simplificada. SeuEvento.com redefine a experiência de eventos, criando uma comunidade envolvente que impulsiona o sucesso em todas as áreas. Conecte-se ao futuro dos eventos hoje mesmo!
                                 </div>
                             </div>
                         </div>

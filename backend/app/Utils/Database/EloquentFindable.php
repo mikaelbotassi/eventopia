@@ -39,7 +39,7 @@ trait EloquentFindable
         string $operator = '=',
         string $failMessage = null
     ) {
-        $failMessage = $failMessage ?: "No query results for [$column $operator $value].";
+        $failMessage = $failMessage ?: "Nenhum registro encontrado para [$column $operator $value].";
 
         $model = self::findBy($column, $value, $operator);
         if (! $model) {

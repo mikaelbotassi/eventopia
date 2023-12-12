@@ -2,12 +2,15 @@
 
 namespace App\DTO\User;
 use App\DTO\DTO;
+use App\Models\User;
+use App\Utils\Functions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
 
 class UpdateUserDTO extends DTO
 {
     public string|null $name;
+    public int|null $gallery_id;
     public string|null $email;
     public string|null $cpf_cnpj;
     public string|null $password;
@@ -41,6 +44,17 @@ class UpdateUserDTO extends DTO
                 'string',
                 'max:20'
             ],
+            'categories' => [
+                'nullable',
+                'array'
+            ],
+            'categories.*.id' => [
+                'exists:categories,id'
+            ],
+            'gallery_id' => [
+                'nullable',
+                'exists:galleries,id'
+            ]
         ]);
     }
 

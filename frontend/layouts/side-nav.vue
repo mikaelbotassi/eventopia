@@ -6,7 +6,7 @@
       :collapse="isCollapse"
     >
       <el-menu-item class="group flex flex-col py-3 h-fit gap-1 border-primary text-white hover:bg-primary hover:text-primary" index="2">
-          <img src="~/assets/img/brand.png" class="w-[75px]" />
+          <img src="~/assets/img/brand.png" class="w-[120px]" />
       </el-menu-item>
       <el-divider class="opacity-25 border-secondary"></el-divider>
       <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1" @click="$router.push('/')">
@@ -16,6 +16,10 @@
       <el-menu-item @click="isOpen = !isOpen" class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="2">
         <el-icon class="fill-white"><icons-plus-square /></el-icon>
         <template #title>Adicionar</template>
+      </el-menu-item>
+      <el-menu-item class="group text-white hover:bg-gradient-to-r from-secondary to-primary" index="1" @click="$router.push('/certificate/search')">
+        <el-icon class="fill-white"><icons-magnifying-glass /></el-icon>
+        <template #title>Procurar certificado</template>
       </el-menu-item>
     </el-menu>
     <div class="container mx-auto p-5 flex flex-col items-center justify-start gap-10 w-full">
@@ -43,6 +47,12 @@
                       <icons-user/>
                     </el-icon>
                     Ver perfil
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="$router.push('/certificate/')">
+                    <el-icon>
+                      <icons-certificate/>
+                    </el-icon>
+                    Meus certificados
                   </el-dropdown-item>
                   <el-dropdown-item @click="doLogout()">
                     <el-icon>

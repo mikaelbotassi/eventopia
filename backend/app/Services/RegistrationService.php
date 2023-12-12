@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\DTO\DTO;
+use App\DTO\Event\EventDTO;
 use App\DTO\Registration\RegistrationDTO;
+use App\Models\Certificate;
 use App\Models\Event;
 use App\Models\Registration;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -25,8 +28,14 @@ class RegistrationService
 
     }
 
-    public function findById(int $id):DTO{
-        return RegistrationDTO::toDTO(Registration::findByOrFail($id));
+    /**
+     * @throws Exception
+     */
+    public function findById(int $id): ?DTO{
+        $registration = Registration::findByOrFail($id);
+        if(!$this->isAuthorizedOrTheOwner($registration)) return null;
+        $registration->event->ownerObj = User::findByOrFail($registration->event->owner);
+        return RegistrationDTO::toDTO($registration);
     }
 
     /**
@@ -37,12 +46,18 @@ class RegistrationService
         $arr = $objDto->toArray();
 
         if(!Event::where('id', $arr['event_id'])->exists())
-            throw new Exception("Event not found", 404);
+            throw new Exception("Evento não encontrado", 404);
 
-        if(!Event::where('id', $arr['event_id'])
+        if(Event::where('id', $arr['event_id'])
             ->where('registration_validity', '<', now())->exists()
         )
-            throw new Exception("The registration deadline for the event has expired", 406);
+            throw new Exception("Parece que você extrapolou a data limite de inscrição.
+            Por este motivo não foi possível confirmar sua inscrição", 406);
+
+        if(Registration::where('event_id', $arr['event_id'])
+            ->where('user_id', auth()->id())->exists()
+        )
+            throw new Exception("Você já está inscrito neste evento.", 409);
 
         foreach ($arr as $name => $value)
             if($value != null) $obj->$name = $value;
@@ -63,25 +78,27 @@ class RegistrationService
      */
     public function delete(int $id):bool{
         $obj = Registration::findByOrFail($id);
-        if($obj->user_id != auth()->id() || Event::findByOrFail('id', $obj->event_id)->owner != auth()->id())
-            throw new Exception("You do not have privileges to perform this action");
+        if($obj->presence_date != '')
+            throw new Exception("Não é possível cancelar uma inscrição que já foi confirmada", 406);
+        if($obj->user_id != auth()->id() && Event::findByOrFail($obj->event_id)->owner != auth()->id())
+            throw new Exception("Você não tem autorização para realizar esta operação", 403);
         return $obj->delete();
     }
 
     /**
      * @throws Exception
      */
-    public function getQrCodeByEvent(int $event_id):string
+    public function getQrCodeById(int $registration_id):string
     {
-        if(!Event::where('id',$event_id)->exists())
-            throw new Exception("Event not found", 404);
+        $registration = Registration::findByOrFail($registration_id);
 
-        if(!Event::where('id',$event_id)->where('owner', auth()->id())->exists())
-            throw new Exception("You have no control over the requested event", 405);
+        if(!$this->isAuthorizedOrTheOwner($registration)) return false;
 
         $data = [
-            'event_id' => $event_id,
-            'validity' => Carbon::now()->addHours(24)->toDateTimeString(),
+            'registration_id' => $registration->id,
+            'user_name' => $registration->user->name,
+            'event_title' => $registration->event->title,
+//            'validity' => Carbon::now()->addHours(24)->toDateTimeString(),
             'created_at' => now()
         ];
 
@@ -97,15 +114,82 @@ class RegistrationService
     public function confirmPresence(string $qrCode):bool
     {
         $obj = json_decode(Crypt::decryptString($qrCode));
-        if(now() > $obj->validity)
-            throw new Exception("Unable to complete your action because the QrCode has expired", 406);
 
-        if($registration = Registration::where('user_id', auth()->id())->where('event_id', $obj->event_id)->first()){
-            $registration->is_present = true;
-            $registration->save();
-            return true;
+        $registration = Registration::findByOrFail($obj->registration_id);
+
+        if($registration->event->owner != auth()->id())
+            throw new Exception("Você não possui autorização para realizar esta operação", 403);
+
+        if($registration->event->event_date > now())
+            throw new Exception("Não é possível definir presença antes do evento.", 406);
+
+        if($registration->presence_date != '') return true;
+
+        $registration->presence_date = now();
+        $registration->save();
+
+        $certificate = new Certificate();
+        $certificate->registration_id = $registration->id;
+        $timestamp = now()->timestamp;
+        $certificate->code = md5($timestamp.config('app.key'));
+        $certificate->save();
+        return true;
+    }
+
+    public function getAllWithFilter(array $filters):Collection{
+        $query = Registration::query();
+
+        foreach ($filters as $filter){
+            $query->where($filter['column'],$filter['operator'],$filter['value']);
         }
-        return false;
+
+        return RegistrationDTO::toDTOs($query->get());
+
+    }
+
+    public function getAllByAuthId(): Collection
+    {
+        $query = Registration::query();
+        $query->join('users', 'registrations.user_id', '=', 'users.id')
+        ->join('events', 'events.id', '=', 'registrations.event_id')
+        ->select('registrations.*')
+        ->where('users.id', auth()->id())
+        ->orderBy('events.event_date')
+        ->get();
+        return RegistrationDTO::toDTOs($query->get());
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function isAuthorizedOrTheOwner(Registration $registration):bool{
+        if($registration->user_id != auth()->id() && $registration->event->owner != auth()->id())
+            throw new Exception("Você não tem autorização para realizar esta operação", 403);
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function exportCSV($event_id, array $filters): \Illuminate\Database\Eloquent\Collection|bool|array
+    {
+        $event = Event::findByOrFail($event_id);
+        if($event->owner != auth()->id())
+            throw new Exception("Você não tem autorização para realizar esta operação", 403);
+
+        if(!Registration::where('event_id', $event_id)->exists()) return false;
+
+        $query = Registration::query();
+        $query->where('event_id', '=', $event_id);
+
+        if($filters){
+            foreach ($filters as $filter){
+                $query->where($filter['column'],$filter['operator'],$filter['value']);
+            }
+        }
+
+        return $query->get();
+
     }
 
 }

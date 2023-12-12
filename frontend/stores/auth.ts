@@ -11,11 +11,12 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuth = ref(false);
   const loading = ref(false);
   const token = ref('');
+  const url = '/auth/';
 
   async function authenticateUser({ email, password }: UserPayloadInterface) {
     loading.value = true;
     const {$api} = useNuxtApp();
-    await $api.post('/auth/login', {
+    await $api.post(`${url}login`, {
         email,
         password
     }).then(
@@ -48,21 +49,33 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function refreshToken(){
     const {$api} = useNuxtApp();
-    return await $api.get('/auth/refresh')
+    return await $api.get(`${url}refresh`)
     .then((resp) => {
       const token = useCookie('token');
       token.value = resp.data;
       isAuth.value = true;
+      return true;
     })
     .catch((err) => {
       toastError('Sua sessão expirou, faça login novamente para utilizar nossos serviços.');
-      useRouter().push('/logout');
+      return false;
     });
+  }
+
+  async function validatePassword(password:string){
+    loading.value = true;
+    const {$api} = useNuxtApp();
+    return await $api.post(`${url}validate-password`, {password:password})
+    .then(() => true)
+    .catch(() => false)
+    .finally(() => {
+      loading.value = false;
+    })
   }
 
   async function me(){
     const {$api} = useNuxtApp();
-    const resp:any = await $api.get('/auth/me');
+    const resp:any = await $api.get(`${url}me`);
     return resp.data.data as OwnerUser
   }
 
@@ -74,7 +87,8 @@ export const useAuthStore = defineStore('auth', () => {
     refreshToken,
     authenticateUser,
     logUserOut,
-    me
+    me,
+    validatePassword
   }
 
 });

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('event_id')->constrained('events');
-            $table->boolean('is_present')->default(false);
+            $table->dateTime("presence_date")->nullable();
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\DTO\User;
 use App\DTO\DTO;
 use App\Models\Category;
+use App\Models\Gallery;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserDTO extends DTO
@@ -13,9 +14,8 @@ class UserDTO extends DTO
     public string|null $birth;
 
     public array|null $categories = [];
+    public Gallery|null $img = null;
     public Collection|null $feedbacks = null;
-
-    public Collection|null $certificates = null;
 
     public function __construct()
     {

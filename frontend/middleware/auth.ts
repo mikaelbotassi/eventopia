@@ -11,11 +11,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     if(token.value && hasExpired()){
-        refreshToken()
+        if(!(await refreshToken())){
+            return navigateTo('/logout');
+        }
     }
 
     // if token exists and url is /login redirect to homepage
-    if (token.value && (to?.name === 'login' || to?.name === 'sing-up')) {
+    if (token.value && (to?.name === 'login' || to?.name === 'sign-up')) {
         return navigateTo('/');
     }
 

@@ -11,7 +11,7 @@ class RegistrationDTO extends DTO
     public int|null $id;
     public User $user;
     public Event $event;
-    public bool $is_present;
+    public string $presence_date;
     public string $created_at;
 
     public function __construct()

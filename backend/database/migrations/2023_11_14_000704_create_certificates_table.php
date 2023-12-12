@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('event_id')->constrained('events');
-            $table->unsignedBigInteger("code")->unique();
+            $table->foreignId('registration_id')->constrained('registrations');
+            $table->string("code",50)->unique();
             $table->timestamps();
         });
     }

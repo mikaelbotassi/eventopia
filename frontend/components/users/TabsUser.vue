@@ -6,18 +6,18 @@
                     <events-event-card
                     v-for="(entity,i) in filteredEntities" :key="i"
                     :id="entity.id"
+                    :img="`${baseApiUrl}/gallery/${entity.gallery[0]?.path}/${entity.gallery[0]?.filename}`"
                     :title="entity.title"
                     :event_date="entity.event_date"
                     :localization="entity.localization"
                     :description="entity.localization"
                     />
                 </div>
-                <div class="bg-dark border p-3 rounded-lg border-secondary text-secondary" :closable="false" v-else >
-                    <h2 class="text-2xl font-bold">Ops...</h2>
-                    <p>Nenhum evento cadastrado até o momento</p>
-                </div>
+                <shared-empty-records v-else/>
             </el-tab-pane>
-            <el-tab-pane label="Minhas Inscrições" v-if="showSubscriptions"></el-tab-pane>
+            <el-tab-pane label="Minhas Inscrições" v-if="showSubscriptions">
+                <registrations-registration-list :typeEvent="false"/>
+            </el-tab-pane>
         </el-tabs>
     </template>
     <div class="flex items-center justify-center p-10" v-else>
@@ -37,15 +37,31 @@
     const eventStore = useEventStore();
     const { filteredEntities, loading } = storeToRefs(eventStore);
     const { getAllByFilter } = eventStore;
+    const baseApiUrl = useRuntimeConfig().public.baseApiUrl;
+    const { getAllByToken } = useRegistrationStore();
+
+    const isAsync = ref(false);
+
+    useAsyncData('userEvents', async () => {
+        isAsync.value = true;
+        await getAllByFilter([
+            {
+                column:"owner",
+                operator:"=",
+                value:props.userId
+            }
+        ]);
+    });
 
     onMounted(() => {
+        if(isAsync.value) return true;
         getAllByFilter([
             {
                 column:"owner",
                 operator:"=",
                 value:props.userId
             }
-        ])
+        ]);
     });
 
 </script>

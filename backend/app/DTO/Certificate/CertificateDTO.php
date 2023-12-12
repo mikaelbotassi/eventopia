@@ -2,16 +2,14 @@
 
 namespace App\DTO\Certificate;
 use App\DTO\DTO;
-use App\Models\Category;
 use App\Models\Event;
-use App\Models\User;
+use App\Models\Registration;
 
 class CertificateDTO extends DTO
 {
     public int|null $id;
-    public User $user;
-    public Event $event;
-    public int $code;
+    public Registration $registration;
+    public string $code;
     public string $created_at;
 
     public function __construct()
