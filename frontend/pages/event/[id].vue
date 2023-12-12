@@ -2,12 +2,12 @@
     <div class="w-full" v-if="!loading">
         <article class="bg-gray-700 pb-10 text-white relative shadow-lg rounded-xl overflow-hidden">
             <div class="aspect-video relative">
-                <el-carousel v-if="entity.gallery && entity.gallery.length > 0" :autoplay="false" trigger="click" height="100%" class="w-full h-[500px]">
+                <el-carousel v-if="entity.gallery && entity.gallery.length > 0" :autoplay="false" trigger="click" height="100%" class="w-full h-full">
                     <el-carousel-item class="h-full" v-for="image in entity.gallery" :key="image">
-                        <img :src="`${baseApiUrl}/gallery/${image?.path}/${image?.filename}`" class="w-full object-cover " alt="profile picture" />
+                        <img :src="`${baseApiUrl}/gallery/${image?.path}/${image?.filename}`" class="w-full h-full object-cover " alt="profile picture" />
                     </el-carousel-item>
                 </el-carousel>
-                <img v-else src="~/assets/img/empty.jpg" class="w-full h-[500px] object-cover"/>
+                <img v-else src="~/assets/img/empty.jpg" class="w-full h-full object-cover"/>
                 <el-dropdown v-show="isOwner" class="absolute top-10 right-10" trigger="click">
                     <span class="el-dropdown-link bg-gray-700 px-4 py-2 rounded-full">
                         <icons-ellipsis-vertical class="fill-white text-xl"/>
