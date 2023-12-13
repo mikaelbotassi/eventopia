@@ -77,7 +77,7 @@
                 <div class="border-t border-dark/25 pt-5 mt-10 flex items-center gap-5">
                     <img src="~/assets/img/brand.png" alt="logo seuEvento.com" class="w-[100px]" />
                     <div>
-                        <strong>Aviso:</strong> Esta página não deve ser modificada, muito menos impressa por qualquer outra fonte a não da Rede SeuEvento.com.
+                        <strong>Aviso:</strong> Esta página não deve ser modificada, muito menos impressa por qualquer outra fonte a não ser da Rede SeuEvento.com.
                     </div>
                 </div>
             </div>

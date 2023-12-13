@@ -38,7 +38,7 @@
                         <icons-pin class="mb-5 text-xl"/>
                         <small class="text-white">Localização</small>
                         {{ entity.localization }}
-                        <a href="{{ entity.urlLocalization }}" target="_blank" class="absolute inset-0"></a>
+                        <a :href="entity.urlLocalization" target="_blank" class="absolute inset-0"></a>
                     </div>
                     <div class="flex flex-col items-center relative rounded-xl p-3 w-[200px] h-[200px] bg-primary/50 justify-center fill-white leading-none gap-2 mb-2">
                         <icons-schedule class="mb-5 text-xl"/>
