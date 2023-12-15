@@ -92,9 +92,8 @@
   const formater = new Utils();
 
   function cancelRegistration(id:any){
-    loadingAction.value = true;
-    deleteById(id).finally(() => loadingAction.value = false)
-  } 
+    deleteById(id)
+  }
 
   useAsyncData(
   'userRgistrations',
